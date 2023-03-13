@@ -2,18 +2,27 @@
 
 
 ### Useful typedefs :
-| Name |  Equivalent |
-| - | - |
-| socklen_t| `int` |
-| uint16_t | `unsigned short` |
-| uint32_t | `unsigned long` |
-| ushort | `unsigned short` |
-| in_addr_t | `unsigned long` |
-| off_t | `int` |
-| nfds_t | `unsigned int` |
-| size_t | `unsigned int` |
-| ssize_t | `int `|
-| sighandler_t | `void (*sighandler_t)(int)` |
+| Name |  Equivalent | Use case |
+| :-: | :-: | :-: |
+| blkcnt_t | `int` | Count of bytes |
+| blksize_t | `int` | File block size |
+| dev_t | `unsigned int` | Hold device numbers |
+| gid_t | `unsigned int` | Hold group IDs |
+| in_addr_t | `unsigned int` | Hold addresses |
+| ino_t | `unsigned int` | Inode type |
+| mode_t | `unsigned int`| File attributes |
+| nfds_t | `unsigned int` | Number of file descriptors |
+| nlink_t | `unsigned int`| Link counts |
+| off_t | `int` | File sizes |
+| size_t | `unsigned int` | Size of objects |
+| sighandler_t | `void (*sighandler_t)(int)` | Signal processing function |
+| socklen_t| `int` | Length and size values used by socket related parameters |
+| ssize_t | `int `| Count of bytes or an error indication |
+| time_t | `long` | Hold time in seconds |
+| uid_t | `unsigned int` | Hold user IDs |
+| uint16_t | `unsigned short` | :question: |
+| uint32_t | `unsigned int` | :question: |
+| ushort | `unsigned short` | :question:|
 
 ### Useful structs :
 
@@ -79,7 +88,7 @@ struct in_addr {
 ### Allowed functions :
 
 | Function | Prototype |
-| -| -|
+| :-:| -|
 | accept | `int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);`|
 | bind | `int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);` |
 | close | `int close(int fd);`|
