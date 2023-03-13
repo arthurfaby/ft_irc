@@ -1,4 +1,80 @@
-## ft_irc
+## FT_IRC
+
+
+### Useful typedefs :
+| Name |  Equivalent |
+| - | - |
+| socklen_t| `int` |
+| uint16_t | `unsigned short` |
+| uint32_t | `unsigned long` |
+| ushort | `unsigned short` |
+| in_addr_t | `unsigned long` |
+| off_t | `int` |
+| nfds_t | `unsigned int` |
+| size_t | `unsigned int` |
+| ssize_t | `int `|
+| sighandler_t | `void (*sighandler_t)(int)` |
+
+### Useful structs :
+
+```c++
+struct addrinfo {
+	int				ai_flags;
+	int				ai_family;
+	int				ai_socktype;
+	int				ai_protocol;
+	size_t			ai_addrlen;
+	struct sockaddr	*ai_addr;
+	char			*ai_canonname;
+	struct addrinfo	*ai_next;
+};
+
+struct sockaddr {
+	ushort	sa_family;
+	char	sa_data[14];
+};
+
+struct pollfd {
+	int		fd;
+	short	events;
+	short	revents;
+};
+
+struct stat {
+    dev_t		st_dev;
+    ino_t		st_ino;
+    mode_t		st_mode;
+    nlink_t		st_nlink;
+    uid_t		st_uid;
+    gid_t		st_gid;
+    dev_t		st_rdev;
+    off_t		st_size; 
+    blksize_t	st_blksize;
+    blkcnt_t	st_blocks;
+    time_t		st_atime;
+    time_t		st_mtime;
+    time_t		st_ctime;
+};
+
+struct hostent {
+	char	*h_name;
+	char	**h_aliases;
+	int		h_addr_type;
+	int		h_length;
+	char	**h_addr_list;
+};
+
+struct protoent {
+	char	*p_name;
+	char	**p_aliases;
+	int		p_proto;
+};
+
+struct in_addr {
+	unsigned long	s_addr;
+};
+```
+
 
 ### Allowed functions :
 
