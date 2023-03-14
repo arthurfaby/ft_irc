@@ -1,7 +1,8 @@
 ## FT_IRC
 
-
-### Useful typedefs :
+<details>
+	<summary>### Usefule typedefs</summary>
+	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
 | blkcnt_t | `int` | Count of bytes |
@@ -23,6 +24,8 @@
 | uint16_t | `unsigned short` | :question: |
 | uint32_t | `unsigned int` | :question: |
 | ushort | `unsigned short` | :question:|
+
+</details>
 
 ### Useful structs :
 
@@ -115,12 +118,6 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
-<details>
-<summary>test</summary>
-
-sdfsdf
-
-</details>
 
 
 ## Sockets :
