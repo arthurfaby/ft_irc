@@ -114,7 +114,8 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
-accept : extract request on aueue of *sockfd*, creates a new connected socket and returns a new fd referring to that socket. *sockfd* is unaffected by this call.
+**accept**
+> extract request on aueue of *sockfd*, creates a new connected socket and returns a new fd referring to that socket. *sockfd* is unaffected by this call.
 
 ### Sockets
 
