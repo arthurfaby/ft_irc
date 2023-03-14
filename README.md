@@ -131,8 +131,16 @@ struct in_addr {
 > performs a command (determined by *cmd*) on *fd*. See the [fcntl man](https://man7.org/linux/man-pages/man2/fcntl.2.html) for further details on commands.
 
 **freeaddrinfo**
-> free one or more **addrinfo** structures returned by *getaddrinfo()*. If *ai_next* field of the structure is not null, the entier list of structures shall be freed.
+> free one or more **addrinfo** structures returned by **getaddrinfo()**. If *ai_next* field of the structure is not null, the entier list of structures shall be freed.
 
+**fstat**
+> obtain information abourt an open file associated with *fildes*, and write it to the area pointed to by *buf*.
+
+**getaddrinfo**
+> returns one or more **addrinfo** structures, each of which contains an Internet address that can be specified in a call to [bind(2)](https://man7.org/linux/man-pages/man2/bind.2.html) or [connect(2)](https://man7.org/linux/man-pages/man2/bind.2.html). **getaddrinfo()** combines the functionality provided by [gethostbyname(3)](https://man7.org/linux/man-pages/man3/gethostbyname.3.html) and [getservbyname(3)](https://man7.org/linux/man-pages/man3/getservbyname.3.html) into a single interface, but unline the latter functions, **getaddrinfo()** is reentrant and allows programs to eliminate IPv4-versus-IPv6 dependencies.
+
+**gethostbyname**
+> obsolete function. Applications should use [getaddrinfo(3)](https://man7.org/linux/man-pages/man3/getaddrinfo.3.html), [getnameinfo(3)](https://man7.org/linux/man-pages/man3/getnameinfo.3.html) and [gai_strerror(3)](https://man7.org/linux/man-pages/man3/gai_strerror.3.html) instead.
 
 ### Sockets
 
@@ -170,3 +178,9 @@ https://man7.org/linux/man-pages/man2/connect.2.html
 https://man7.org/linux/man-pages/man2/fcntl.2.html
 
 https://man7.org/linux/man-pages/man3/freeaddrinfo.3p.html
+
+https://man7.org/linux/man-pages/man3/fstat.3p.html
+
+https://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+
+https://man7.org/linux/man-pages/man3/gethostbyname.3.html
