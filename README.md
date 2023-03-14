@@ -116,27 +116,21 @@ struct in_addr {
 
 <details>
 	<summary><h5>accept</h5></summary>
-	
 </details>
 <details>
 	<summary><h5>bind</h5></summary>
-	
 </details>
 <details>
 	<summary><h5>close</h5></summary>
-	
 </details>
 <details>
 	<summary><h5>connect</h5></summary>
-	
 </details>
 <details>
 	<summary><h5>fcntl</h5></summary>
-	
 </details>
 <details>
 	<summary><h5>freeaddrinfo</h5></summary>
-	
 </details>
 
 ### Sockets
