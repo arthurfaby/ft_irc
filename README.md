@@ -107,7 +107,7 @@ struct in_addr {
 | lseek | `off_t lseek(int fd, off_t offset, int whence);` |
 | ntonl | `uint32_t ntonl(uint32_t netlong);` |
 | ntons | `uint16_t ntons(uint16_t netshort);` |
-| poll | `int poll(struct pollfd *fds, nfds_t mfds, int timeout);` |
+| poll | `int poll(struct pollfd *fds, nfds_t nfds, int timeout);` |
 | recv | `ssize_t recv(int sockfd, void *buf, size_t len, int flags);` |
 | send | `ssize_t send(int sockfd, const void *buf, size_t len, int flags);` |
 | setsockopt | `int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);` |
