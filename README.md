@@ -114,3 +114,24 @@ struct in_addr {
 | setsockopt | `int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);` |
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
+
+## Sockets :
+
+### What is a socket ?
+
+Sockets allow communication between two different **processes** on the same or different machines. 
+It use **Unix fds** (file descriptors) to communicate. Every I/O operations is done by **writing** or **reading** a fd.
+Functions such as read() and write() work with sockets in the **same way** they do with files and pipes.
+
+### Where is it used ?
+
+Unix sockets are used in a **client-server** application framework (set of structural software components that serves to create the foundations of software, i.e. an architecture).
+
+### Different socket types :
+- **Stream Sockets** : Delivery in a networked environment is guaranteed. If you send through the stream socket three items A, B and C, they will arrive in the same order. These sockets use [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol)
+
+
+
+
+### Sources :
+https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
