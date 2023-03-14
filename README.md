@@ -114,6 +114,31 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
+<details>
+	<summary><h5>accept</h5></summary>
+	
+</details>
+<details>
+	<summary><h5>bind</h5></summary>
+	
+</details>
+<details>
+	<summary><h5>close</h5></summary>
+	
+</details>
+<details>
+	<summary><h5>connect</h5></summary>
+	
+</details>
+<details>
+	<summary><h5>fcntl</h5></summary>
+	
+</details>
+<details>
+	<summary><h5>freeaddrinfo</h5></summary>
+	
+</details>
+
 ### Sockets
 
 #### What is a socket ?
