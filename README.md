@@ -115,7 +115,10 @@ struct in_addr {
 | socket | `int socket(int domain, int type, int protocol);` |
 
 **accept**
-> extract request on aueue of *sockfd*, creates a new connected socket and returns a new fd referring to that socket. *sockfd* is unaffected by this call.
+> extract request on queue of *sockfd*, creates a new connected socket and returns a new fd referring to that socket. *sockfd* is unaffected by this call.
+
+**bind**
+> assigned the *addr* to the socket referred by *sockfd*. *addrlen* specifies the size of the address structure pointed to by *addr*. 
 
 ### Sockets
 
@@ -141,4 +144,7 @@ Unix sockets are used in a **client-server** application framework (set of struc
 ### Sources
 	
 https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
+
+https://man7.org/linux/man-pages/man2/accept.2.html
+https://man7.org/linux/man-pages/man2/bind.2.html
 
