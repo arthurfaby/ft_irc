@@ -1,7 +1,6 @@
 ## FT_IRC
 
-<details>
-	<summary><h3>Usefule typedefs</h3></summary>
+### Usefule typedefs
 	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
@@ -25,9 +24,7 @@
 | uint32_t | `unsigned int` | :question: |
 | ushort | `unsigned short` | :question:|
 
-</details>
-<details>
-	<summary><h3>Useful structs</h3></summary>
+### Useful structs
 
 ```c++
 struct addrinfo {
@@ -87,10 +84,7 @@ struct in_addr {
 };
 ```
 	
-</details>
-
-<details>
-	<summary><h3>Allowed functions</h3></summary>
+### Allowed functions
 
 | Function | Prototype |
 | :-:| -|
@@ -120,22 +114,19 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
-</details>
+### Sockets
 
-<details>
-	<summary><h3>Sockets</h3></summary>
-
-### What is a socket ?
+#### What is a socket ?
 
 Sockets allow communication between two different **processes** on the same or different machines. 
 It use **Unix fds** (file descriptors) to communicate. Every I/O operations is done by **writing** or **reading** a fd.
 Functions such as read() and write() work with sockets in the **same way** they do with files and pipes.
 
-### Where is it used ?
+#### Where is it used ?
 
 Unix sockets are used in a **client-server** application framework (set of structural software components that serves to create the foundations of software, i.e. an architecture).
 
-### Different socket types :
+#### Different socket types :
 - **Stream sockets** : Delivery in a networked environment is **guaranteed**. If you send through the stream socket three items A, B and C, they will arrive in the **same order**. These sockets use [**TCP**](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol) for data tranmission. If delivery is impossible, the sender receives an **error indicator**. Data records do not have any boundaries.
 
 - **Datagram sockets** : Delivery in a networked environment is **not guaranteed**. They're connectionless because you don't need to have an open connection as in **stream sockets**. You build a packet with the destination informatin and send it  out. They use [**UDP**](https://en.wikipedia.org/wiki/User_Datagram_Protocol) (User Datagram Protocol). 
@@ -144,11 +135,7 @@ Unix sockets are used in a **client-server** application framework (set of struc
 
 - **Sequences packet sockets** : They are similar to a **stream socket**, with the exception that record boundaries are **preserved**. This interface is provided only as a part of the Network Systems (NS) socket abstraction, and is very important in most serious NS applications. Sequenced-packet sockets allow the user to **manipulate** the Sequence Packet Protocol (SPP) or Internet Datagram Protocol (IDP) headers on a packet or a group of packets, either by **writing a prototype** header along with whatever data is to be **sent**, or by specifying a default header to be used with all outgoing data, and allows the user to receive the headers on incoming packets.
 
-</details>
-
-<details>
-	<summary><h3>Sources</h3></summary>
+### Sources
 	
 https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
 
-</details>
