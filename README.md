@@ -26,7 +26,6 @@
 | ushort | `unsigned short` | :question:|
 
 </details>
-
 <details>
 	<summary><h3>Useful structs</h3></summary>
 
