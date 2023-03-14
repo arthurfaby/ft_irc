@@ -1,6 +1,6 @@
 ## FT_IRC
 
-### Usefule typedefs
+### Useful typedefs
 	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
@@ -44,9 +44,9 @@ struct sockaddr {
 };
 
 struct pollfd {
-	int		fd;
-	short	events;
-	short	revents;
+	int	fd;		// file descriptor
+	short	events;		// requested events
+	short	revents;	// returned events
 };
 
 struct stat {
@@ -74,9 +74,9 @@ struct hostent {
 };
 
 struct protoent {
-	char	*p_name;
-	char	**p_aliases;
-	int	p_proto;
+	char	*p_name;	// the official name of the protocol
+	char	**p_aliases;	// a NULL-terminated list of alternative names for the protocol
+	int	p_proto;	// the protocol number
 };
 
 struct in_addr {
@@ -107,7 +107,7 @@ struct in_addr {
 | lseek | `off_t lseek(int fd, off_t offset, int whence);` |
 | ntonl | `uint32_t ntonl(uint32_t netlong);` |
 | ntons | `uint16_t ntons(uint16_t netshort);` |
-| poll | `int poll(struct pollfd *fds, nfds_t mfds, int timeout);` |
+| poll | `int poll(struct pollfd *fds, nfds_t nfds, int timeout);` |
 | recv | `ssize_t recv(int sockfd, void *buf, size_t len, int flags);` |
 | send | `ssize_t send(int sockfd, const void *buf, size_t len, int flags);` |
 | setsockopt | `int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);` |
@@ -141,6 +141,50 @@ struct in_addr {
 
 **gethostbyname**
 > obsolete function. Applications should use [getaddrinfo(3)](https://man7.org/linux/man-pages/man3/getaddrinfo.3.html), [getnameinfo(3)](https://man7.org/linux/man-pages/man3/getnameinfo.3.html) and [gai_strerror(3)](https://man7.org/linux/man-pages/man3/gai_strerror.3.html) instead.
+
+**getprotobyname**
+> returns a **protoend** structure for the entry from the database that matches the protocol name *name*. A conncetion is opened to the database if necessary.
+
+**getsockname**
+> returns the current address to which the socket referred by *sockfd* is bound, un the buffer pointed to by *addr*. addrlen* specifies the size of the address structure pointed to by *addr*.
+
+**htonl**
+> converts *hostlong* from host byte order to network byte order.
+
+**htons**
+> converts *hostshort* from host byte order to network byte order.
+
+**inet_addr**
+> converts the internet host address *cp* from IPv4 numbers-and-dots notation into binary data in network byte order.
+
+**inet_ntoa**
+> converts the internet host address *in*, given in network byte order, to a string in IPv4 dotted-decimal notation.
+
+**listen**
+> marks the socket referred to by *sockfd* as a passive socket, that is, as a socket that will be used to accept incoming connection requests using [accept(2)](https://man7.org/linux/man-pages/man2/accept.2.html).
+
+**lseek**
+> repositions the file offset of *fd* to the argument *offset* according to the directive *whence* (see [lseek man](https://man7.org/linux/man-pages/man2/lseek.2.html) for further details).
+
+**ntohl**
+> converts *netlong* from network byte order to hsot byte order.
+
+**ntohs**
+> converts *netshort* from network byte order to hsot byte order.
+
+**poll**
+> 
+
+**recv**
+
+**send**
+
+**setsockopt**
+
+**signal**
+
+**socket**
+
 
 ### Sockets
 
@@ -184,3 +228,17 @@ https://man7.org/linux/man-pages/man3/fstat.3p.html
 https://man7.org/linux/man-pages/man3/getaddrinfo.3.html
 
 https://man7.org/linux/man-pages/man3/gethostbyname.3.html
+
+https://linux.die.net/man/3/getprotobyname
+
+https://man7.org/linux/man-pages/man2/getsockname.2.html
+
+https://linux.die.net/man/3/htonl (for htonl, htons, ntolh and ntols)
+
+https://linux.die.net/man/3/inet_addr (for inet_addr and inet_ntoa)
+
+https://man7.org/linux/man-pages/man2/listen.2.html
+
+https://man7.org/linux/man-pages/man2/lseek.2.html
+
+https://man7.org/linux/man-pages/man2/poll.2.html
