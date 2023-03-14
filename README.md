@@ -160,8 +160,13 @@ Unix sockets are used in a **client-server** application framework (set of struc
 https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
 
 https://man7.org/linux/man-pages/man2/accept.2.html
+
 https://man7.org/linux/man-pages/man2/bind.2.html
+
 https://man7.org/linux/man-pages/man2/close.2.html
+
 https://man7.org/linux/man-pages/man2/connect.2.html
+
 https://man7.org/linux/man-pages/man2/fcntl.2.html
+
 https://man7.org/linux/man-pages/man3/freeaddrinfo.3p.html
