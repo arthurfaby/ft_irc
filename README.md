@@ -115,6 +115,13 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
+<details>
+<summary>test</summary>
+
+sdfsdf
+
+</details>
+
 
 ## Sockets :
 
