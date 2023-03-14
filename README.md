@@ -115,6 +115,7 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
+
 ## Sockets :
 
 ### What is a socket ?
@@ -128,9 +129,13 @@ Functions such as read() and write() work with sockets in the **same way** they 
 Unix sockets are used in a **client-server** application framework (set of structural software components that serves to create the foundations of software, i.e. an architecture).
 
 ### Different socket types :
-- **Stream Sockets** : Delivery in a networked environment is guaranteed. If you send through the stream socket three items A, B and C, they will arrive in the same order. These sockets use [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol)
+- **Stream sockets** : Delivery in a networked environment is **guaranteed**. If you send through the stream socket three items A, B and C, they will arrive in the **same order**. These sockets use [**TCP**](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol) for data tranmission. If delivery is impossible, the sender receives an **error indicator**. Data records do not have any boundaries.
 
+- **Datagram sockets** : Delivery in a networked environment is **not guaranteed**. They're connectionless because you don't need to have an open connection as in **stream sockets**. You build a packet with the destination informatin and send it  out. They use [**UDP**](https://en.wikipedia.org/wiki/User_Datagram_Protocol) (User Datagram Protocol). 
 
+- **Raw sockets** : These provide users acess to the **underlying** communication protocols, which support socket [**abstractions**](https://en.wikipedia.org/wiki/Abstraction_(computer_science)). These sockets are normally **datagram oriented**, though their exact characteristics are dependent on the interface provided by the protocol. Raw sockets are not intended for the general user; they have been provided mainly for those interested in **developing new communication protocols**, or for **gaining access to some of the more cryptic facilities** of an existing protocol.
+
+- **Sequences packet sockets** : -   They are similar to a **stream socket**, with the exception that record boundaries are **preserved**. This interface is provided only as a part of the Network Systems (NS) socket abstraction, and is very important in most serious NS applications. Sequenced-packet sockets allow the user to **manipulate** the Sequence Packet Protocol (SPP) or Internet Datagram Protocol (IDP) headers on a packet or a group of packets, either by **writing a prototype** header along with whatever data is to be **sent**, or by specifying a default header to be used with all outgoing data, and allows the user to receive the headers on incoming packets.
 
 
 ### Sources :
