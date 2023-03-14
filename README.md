@@ -1,6 +1,6 @@
 ## FT_IRC
 
-### U~~seful typedefs~~
+### Useful typedefs
 	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
@@ -44,9 +44,9 @@ struct sockaddr {
 };
 
 struct pollfd {
-	int		fd;
-	short	events;
-	short	revents;
+	int	fd;		// file descriptor
+	short	events;		// requested events
+	short	revents;	// returned events
 };
 
 struct stat {
@@ -173,6 +173,7 @@ struct in_addr {
 > converts *netshort* from network byte order to hsot byte order.
 
 **poll**
+> 
 
 **recv**
 
@@ -239,3 +240,5 @@ https://linux.die.net/man/3/inet_addr (for inet_addr and inet_ntoa)
 https://man7.org/linux/man-pages/man2/listen.2.html
 
 https://man7.org/linux/man-pages/man2/lseek.2.html
+
+https://man7.org/linux/man-pages/man2/poll.2.html
