@@ -7,6 +7,7 @@ User::User(void)
 }
 
 User::User(const User & other)
+	: Client(other)
 {
 	(void)other;
 	std::cout << "Default copy constructor called" << std::endl;

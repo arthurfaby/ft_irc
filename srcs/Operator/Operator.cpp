@@ -7,6 +7,7 @@ Operator::Operator(void)
 }
 
 Operator::Operator(const Operator & other)
+	: Client(other)
 {
 	(void)other;
 	std::cout << "Default copy constructor called" << std::endl;

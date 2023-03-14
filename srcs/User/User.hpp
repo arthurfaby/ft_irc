@@ -1,7 +1,8 @@
 #ifndef USER_HPP
 #define USER_HPP
+#include "Client.hpp"
 
-class User
+class User : public Client
 {
 
 private:
