@@ -127,6 +127,11 @@ struct in_addr {
 **connect**
 > connects the socket referred by *sockfd* to the address specified by *addr*. *addrlen* specifies the size of the address structure pointed to by *addr*
 
+**fcntl**
+> performs a command (determined by *cmd*) on *fd*. See the [fcntl man](https://man7.org/linux/man-pages/man2/fcntl.2.html) for further details on commands.
+
+**freeaddrinfo**
+> free one or more **addrinfo** structures returned by *getaddrinfo()*. If *ai_next* field of the structure is not null, the entier list of structures shall be freed.
 
 
 ### Sockets
@@ -158,3 +163,5 @@ https://man7.org/linux/man-pages/man2/accept.2.html
 https://man7.org/linux/man-pages/man2/bind.2.html
 https://man7.org/linux/man-pages/man2/close.2.html
 https://man7.org/linux/man-pages/man2/connect.2.html
+https://man7.org/linux/man-pages/man2/fcntl.2.html
+https://man7.org/linux/man-pages/man3/freeaddrinfo.3p.html
