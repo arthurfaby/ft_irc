@@ -28,13 +28,13 @@
 
 ```c++
 struct addrinfo {
-	int				ai_flags;
-	int				ai_family;
-	int				ai_socktype;
-	int				ai_protocol;
-	size_t			ai_addrlen;
+	int		ai_flags;
+	int		ai_family;
+	int		ai_socktype;
+	int		ai_protocol;
+	size_t		ai_addrlen;
 	struct sockaddr	*ai_addr;
-	char			*ai_canonname;
+	char		*ai_canonname;
 	struct addrinfo	*ai_next;
 };
 
@@ -50,33 +50,33 @@ struct pollfd {
 };
 
 struct stat {
-    dev_t		st_dev;
-    ino_t		st_ino;
-    mode_t		st_mode;
-    nlink_t		st_nlink;
-    uid_t		st_uid;
-    gid_t		st_gid;
-    dev_t		st_rdev;
-    off_t		st_size; 
+    dev_t	st_dev;
+    ino_t	st_ino;
+    mode_t	st_mode;
+    nlink_t	st_nlink;
+    uid_t	st_uid;
+    gid_t	st_gid;
+    dev_t	st_rdev;
+    off_t	st_size; 
     blksize_t	st_blksize;
     blkcnt_t	st_blocks;
-    time_t		st_atime;
-    time_t		st_mtime;
-    time_t		st_ctime;
+    time_t	st_atime;
+    time_t	st_mtime;
+    time_t	st_ctime;
 };
 
 struct hostent {
 	char	*h_name;
 	char	**h_aliases;
-	int		h_addr_type;
-	int		h_length;
+	int	h_addr_type;
+	int	h_length;
 	char	**h_addr_list;
 };
 
 struct protoent {
 	char	*p_name;
 	char	**p_aliases;
-	int		p_proto;
+	int	p_proto;
 };
 
 struct in_addr {
