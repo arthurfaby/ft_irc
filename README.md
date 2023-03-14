@@ -1,7 +1,7 @@
 ## FT_IRC
 
 <details>
-	<summary>### Usefule typedefs</summary>
+	<summary><h3>Usefule typedefs</h3></summary>
 	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
@@ -27,7 +27,8 @@
 
 </details>
 
-### Useful structs :
+<details>
+	<summary><h3>Useful structs</h3></summary>
 
 ```c++
 struct addrinfo {
@@ -86,9 +87,11 @@ struct in_addr {
 	unsigned long	s_addr;
 };
 ```
+	
+</details>
 
-
-### Allowed functions :
+<details>
+	<summary><h3>Allowed functions</h3></summary>
 
 | Function | Prototype |
 | :-:| -|
@@ -118,9 +121,10 @@ struct in_addr {
 | signal | `sighandler_t signal(int signum, sighandler_t handler);` |
 | socket | `int socket(int domain, int type, int protocol);` |
 
+</details>
 
-
-## Sockets :
+<details>
+	<summary><h3>Sockets</h3></summary>
 
 ### What is a socket ?
 
@@ -141,6 +145,11 @@ Unix sockets are used in a **client-server** application framework (set of struc
 
 - **Sequences packet sockets** : They are similar to a **stream socket**, with the exception that record boundaries are **preserved**. This interface is provided only as a part of the Network Systems (NS) socket abstraction, and is very important in most serious NS applications. Sequenced-packet sockets allow the user to **manipulate** the Sequence Packet Protocol (SPP) or Internet Datagram Protocol (IDP) headers on a packet or a group of packets, either by **writing a prototype** header along with whatever data is to be **sent**, or by specifying a default header to be used with all outgoing data, and allows the user to receive the headers on incoming packets.
 
+</details>
 
-### Sources :
+<details>
+	<summary><h3>Sources</h3></summary>
+	
 https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
+
+</details>
