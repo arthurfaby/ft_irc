@@ -116,9 +116,12 @@ struct in_addr {
 
 **accept**
 > extract request on queue of *sockfd*, creates a new connected socket and returns a new fd referring to that socket. *sockfd* is unaffected by this call.
-
 **bind**
 > assigned the *addr* to the socket referred by *sockfd*. *addrlen* specifies the size of the address structure pointed to by *addr*. 
+**close**
+> closes a file descriptor so that it no longer refers to any file and be reused.
+**connect**
+> connects the socket referred by *sockfd* to the address specified by *addr*. *addrlen* specifies the size of the address structure pointed to by *addr*.
 
 ### Sockets
 
@@ -147,4 +150,5 @@ https://www.tutorialspoint.com/unix_sockets/what_is_socket.htm
 
 https://man7.org/linux/man-pages/man2/accept.2.html
 https://man7.org/linux/man-pages/man2/bind.2.html
-
+https://man7.org/linux/man-pages/man2/close.2.html
+https://man7.org/linux/man-pages/man2/connect.2.html
