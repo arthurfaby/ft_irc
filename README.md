@@ -1,6 +1,6 @@
 ## FT_IRC
 
-### Usefule typedefs
+### Useful typedefs
 	
 | Name |  Equivalent | Use case |
 | :-: | :-: | :-: |
