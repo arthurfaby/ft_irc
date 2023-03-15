@@ -183,8 +183,10 @@ struct in_addr {
 > 
 
 **recv**
+> used to receive messages from a socket. read *len* bytes and fill *buf* with it.
 
 **send**
+> may be used only when the socket is in a **connected** state
 
 **setsockopt**
 
@@ -249,3 +251,7 @@ https://man7.org/linux/man-pages/man2/listen.2.html
 https://man7.org/linux/man-pages/man2/lseek.2.html
 
 https://man7.org/linux/man-pages/man2/poll.2.html
+
+https://man7.org/linux/man-pages/man2/recv.2.html
+
+https://man7.org/linux/man-pages/man2/send.2.html
