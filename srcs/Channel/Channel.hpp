@@ -12,18 +12,18 @@ class Channel
 	
 		Channel & operator=(const Channel & other);
 
-		void				kick(Client const &Client member);
-		void				quit(Client const &Client member);
-		void				join(Client	const &Client member);
-		void				message(std::string const &message)const;
-		std::string			getName(void)const;
-		std::vector<client>	getMembers(void)const;
+		void						kick(Client const &Client member);
+		void						quit(Client const &Client member);
+		void						join(Client	const &Client member);
+		void						message(std::string const &message)const;
+		std::string					getName(void)const;
+		const std::vector<Client*>&	getMembers(void)const;
 		
 
 	private:
 
-		std::string			_name;
-		std::vector<Client>	_members;
+		std::string				_name;
+		std::vector<Client*>	_members;
 };
 
 #endif
