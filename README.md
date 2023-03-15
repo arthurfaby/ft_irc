@@ -183,17 +183,19 @@ struct in_addr {
 > 
 
 **recv**
-> used to receive messages from a socket. read *len* bytes and fill *buf* with it.
+> may be used to receive data on both connectionless and connection-oriented sockets. Same as [**read(2)**](https://man7.org/linux/man-pages/man2/read.2.html) function but with flags (see [**recv man**](https://man7.org/linux/man-pages/man2/recv.2.html) for further details).
 
 **send**
-> may be used only when the socket is in a **connected** state
+> may be used only when the socket is in a **connected** state. same as [**write(2)**](https://man7.org/linux/man-pages/man2/write.2.html) function but with flags(see [**send man**](https://man7.org/linux/man-pages/man2/send.2.html) for further details). 
 
 **setsockopt**
+> shall the option specified by *option_name*, at the protocol level specified by *level*, the the value pointed to by *option_value* for the socket associated with the fd *socket*.
 
 **signal**
+> sets the disposition of the signal *signum* to *handler* wich is either **SIG_IGN**, **SIG_DFL** or the address of a programmer-defined function.
 
 **socket**
-
+> creates an endpoint for communication and returns a fd that refers to that endpoint. *domain* specifies a communication domain.
 
 ### Sockets
 
@@ -255,3 +257,9 @@ https://man7.org/linux/man-pages/man2/poll.2.html
 https://man7.org/linux/man-pages/man2/recv.2.html
 
 https://man7.org/linux/man-pages/man2/send.2.html
+
+https://man7.org/linux/man-pages/man3/setsockopt.3p.html
+
+https://man7.org/linux/man-pages/man2/signal.2.html
+
+https://man7.org/linux/man-pages/man2/socket.2.html
