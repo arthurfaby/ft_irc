@@ -9,68 +9,51 @@
 #include <cstring>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
+
+//doit creer une socket d'ecoute et l'assigner a l'attribut _listening_socket
+int	create_listening_socket(void)
+{
+	int	listen_fd;
+	int	opt = 1;
+
+	listen_fd = socket(AF_INET, SOCK_STREAM, 0)
+	if (listen_fd == -1)
+	{
+		std::cerr << "Socket failed" << std::endl;
+		return (-1);
+	}
+	if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+	{
+        std::cerr<< "Setsockopt failed" << std::endl;
+        return (-1);
+    }
+	return (listen_fd);
+}
+
+//sert a initialiser la structure address qui contient toutes les infos sur le type avec lequel le serveur va communiquer et le port.
+struct sockaddr_in init_address (struct sockaddr_in address, char *port)
+{
+	address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(std::atoi(/*this->*/port));
+	return (address);
+}
 
 int	main(int argc, char **argv)
 {
-	int					socket_;
-	int					new_socket;
-	int					opt = 42;
+	int					listen_fd;
 	struct sockaddr_in	address;
-	int					addrlen = sizeof(address);
-	char				buffer[1024];
 
 	if (argc != 3)
 	{
-		std::cout << "Invalid args. Usage : " << argv[0] << " <port> <password>"<<  std::endl;
+		std::cerr << "Invalid args. Usage : " << argv[1] << ", <port> <password>" << std::endl;
 		return (-1);
 	}
-	socket_ = socket(AF_INET, SOCK_STREAM, 0);
-	if (socket_ == -1)
-	{
-		std::cerr << "Socket creation failed" << std::endl;
+	listen_fd = create_listening_socket();
+	if (listen_fd == -1)
 		return (-1);
-	}
-	if (setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-	{
-		std::cerr << "Setsockopt failed" << std::endl;
-		return (-1);
-	}
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(std::atoi(argv[1]));
-	if (bind(socket_, (struct sockaddr*)&address, sizeof(address)) == -1)
-	{
-		std::cerr << "Bind failed" << std::endl;
-		return (-1);
-	}
-	if (listen(socket_, 5) == -1)
-	{
-		std::cerr << "Listen failed" << std::endl;
-		return (-1);
-	}
-	while (1)
-	{
-		new_socket = accept(socket_, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-		if (new_socket == -1)
-		{
-			std::cerr << "Accept failed" << std::endl;
-			return (-1);
-		}
-		if (recv(new_socket, buffer, 1024, 0) == -1)
-			std::cerr << "Recv failed" << std::endl;
-		else 
-		{
-			if (send(new_socket, "Message received\n", 17, 0) == -1)
-			{
-				std::cerr << "Send failed" << std::endl;
-				return (-1);
-			}
-		}
-		std::cout << buffer;
-		buffer[0] = '\0';
-		close(new_socket);
-	}
-	close(socket_);
+	address = init_address(address, argv[1]);
 	return (0);
 }
