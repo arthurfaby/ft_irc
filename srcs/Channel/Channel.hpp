@@ -3,18 +3,27 @@
 
 class Channel
 {
+	public:
 
-private:
+		Channel(void);
+		Channel(std::string const &name);
+		Channel(const Channel & other);
+		~Channel(void);
+	
+		Channel & operator=(const Channel & other);
 
-	//private attributes here;
+		void				kick(Client const &Client member);
+		void				quit(Client const &Client member);
+		void				join(Client	const &Client member);
+		void				message(std::string const &message)const;
+		std::string			getName(void)const;
+		std::vector<client>	getMembers(void)const;
+		
 
-public:
+	private:
 
-	Channel(void);
-	Channel(const Channel & other);
-	~Channel(void);
-	Channel & operator=(const Channel & other);
-
+		std::string			_name;
+		std::vector<Client>	_members;
 };
 
 #endif
