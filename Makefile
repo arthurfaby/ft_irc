@@ -6,7 +6,7 @@
 #    By: blevrel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/14 13:25:04 by blevrel           #+#    #+#              #
-#    Updated: 2023/03/16 16:56:30 by afaby            ###   ########.fr        #
+#    Updated: 2023/03/16 19:28:06 by pirabaud         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME = ircserv
 
 SRCS =	srcs/main.cpp				\
 		srcs/Server/Server.cpp		\
+		srcs/Client/Client.cpp
 		
 
 OBJS = ${SRCS:.cpp=.o}

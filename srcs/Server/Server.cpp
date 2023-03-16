@@ -91,8 +91,8 @@ void	Server::run(void)
 		/* 		nfds = _clients[i]->getSockfd(); */
 
 		for (size_t i = 0; i < _clients.size(); ++i)
-			if (_clients[i] > nfds)
-				nfds = _clients[i];
+			if (_clients[i]->getSockfd() > nfds)
+				nfds = _clients[i]->getSockfd();
 
 		// select
 		select_res = select(nfds + 1, &_readfds, &_writefds, &_exceptfds, NULL);
@@ -114,17 +114,17 @@ void	Server::run(void)
 			/* { */
 				// receive	
 			/* } */
-			if (FD_ISSET(_clients[i], &_readfds))
+			if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
-				res = recv(_clients[i], buffer, 1024, 0);
+				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
 				if (res == -1)
 				{
 					std::cerr << "[ERROR] Recv failed" << std::endl;
 					return ; // handle rerror
 				}
 				buffer[res] = 0;
-				std::cout << "[LOG] Message received from " << _clients[i] << ": '" << buffer << "'" << std::endl;
-				res = send(_clients[i], "Yes mon bro\n", 12, 0);
+				std::cout << "[LOG] Message received from " << _clients[i]->getName() << ": '" << buffer << "'" << std::endl;
+				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
 				if (res == -1)
 				{
 					std::cerr << "[ERROR] Send failed." << std::endl;
@@ -159,7 +159,6 @@ void	Server::run(void)
 
 void	Server::_new_client_connection(void)
 {
-	//Client*	new_client = new Client(*this, );
 	int	client_socket;
 
 	client_socket = accept(_listening_socket, NULL, NULL); // pas sur de ca
@@ -168,8 +167,9 @@ void	Server::_new_client_connection(void)
 		std::cerr << "[ERROR] Accept failed." << std::endl;
 		return ; // handle error
 	}
+	Client*	new_client = new Client(*this, client_socket);
 	std::cout << "[LOG] New client (" << client_socket << ")" << std::endl;
-	_clients.push_back(client_socket);
+	_clients.push_back(new_client);
 }
 
 void	Server::_init_selectfds(void)
@@ -184,9 +184,9 @@ void	Server::_init_selectfds(void)
 	{
 		/* if (_clients[i] != NULL) */
 		/* { */
-			FD_SET(_clients[i], &_readfds);
-			FD_SET(_clients[i], &_writefds);
-			FD_SET(_clients[i], &_exceptfds);
+			FD_SET(_clients[i]->getSockfd(), &_readfds);
+			FD_SET(_clients[i]->getSockfd(), &_writefds);
+			FD_SET(_clients[i]->getSockfd(), &_exceptfds);
 			/* FD_SET(_clients[i]->getSockfd(), &_readfds); */
 			/* FD_SET(_clients[i]->getSockfd(), &_writefds); */
 			/* FD_SET(_clients[i]->getSockfd(), &_exceptfds); */

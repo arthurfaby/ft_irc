@@ -4,7 +4,7 @@
 #include "Server.hpp"
 #include "Channel.hpp"
 
-class Channel;
+class Server;
 
 class Client
 {
@@ -12,7 +12,7 @@ class Client
 public:
 
 	// Constructors
-	Client(void);
+	Client(const Server& introducer, const int& sockfd);
 	Client(const Client & other);
 	~Client(void);
 	Client & operator=(const Client & other);
@@ -23,9 +23,9 @@ public:
 	void			setOp(const bool& is_op);
 
 	// Getters
-	std::string		getname(void) const;
+	const std::string&		getName(void) const;
 	const Server&	getIntroducer(void) const;
-	int				getSockfd(void) const;
+	const int&		getSockfd(void) const;
 	Channel*		getChannel(void) const;
 	bool			isOp(void) const;
 	bool			isInChannel(void) const;
@@ -44,6 +44,7 @@ private:
 	std::vector<Channel*>	_channels;		// Channel in which the client is (or NULL if not)
 	bool					_is_op;			// true if client is an operator, false otherwise
 
+	//Client(void);
 
 };
 

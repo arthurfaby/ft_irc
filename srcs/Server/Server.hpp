@@ -8,7 +8,9 @@
 #include <netinet/in.h>
 #include <cstdlib>
 #include <unistd.h>
+#include "../Client/Client.hpp"
 
+class Client;
 
 class Server
 {
@@ -64,7 +66,7 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::vector<int>		_clients; // temp attributs of sockets waiting for Client class
+	std::vector<Client *>		_clients; // temp attributs of sockets waiting for Client class
 	/* std::vector<Client*>	_clients; */
 	struct sockaddr_in		_address;
 	fd_set					_readfds;
