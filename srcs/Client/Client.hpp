@@ -4,6 +4,8 @@
 #include "Server.hpp"
 #include "Channel.hpp"
 
+class Channel;
+
 class Client
 {
 
@@ -23,7 +25,7 @@ public:
 	// Getters
 	std::string		getname(void) const;
 	const Server&	getIntroducer(void) const;
-	const int		getSockfd(void) const;
+	int				getSockfd(void) const;
 	Channel*		getChannel(void) const;
 	bool			isOp(void) const;
 	bool			isInChannel(void) const;
