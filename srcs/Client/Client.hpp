@@ -15,19 +15,19 @@ public:
 
 	// Setters
 	void			setName(const std::string& name);
-	void			setOp(const bool& is_op);
+	void			setPass(const bool& pass);
 
 
 	// Getters
+	const bool&				getPass(void) const;
 	const std::string&		getName(void) const;
 	const int&				getSockfd(void) const;
-	const bool&				isOp(void) const;
 
 private:
 
-	std::string				_name;			// Unique nickname of the client (max 9 characters)
-	const int				_sockfd;		// fd which referred to the client socket
-	bool					_is_op;			// true if client is an operator, false otherwise
+	std::string				_name;		// Unique nickname of the client (max 9 characters)
+	const int				_sockfd;	// fd which referred to the client socket
+	bool					_pass;		// true if client entererd password, false otherwise
 
 };
 

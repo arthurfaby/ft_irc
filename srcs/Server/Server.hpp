@@ -86,23 +86,38 @@ private:
 	// Commands
 
 	/* NICK <nickname> */
-	void	_nick(Client* client, const std::string& nickname);
+	void	_NICK(Client* client, const std::string& command);
 
-	/* USER <user> <mode> <unused> <realname> */
+	/* USER <user> <mode> <unused> <realname> set only username to user. */
+	void	_USER(Client* client, const std::string& command);
+
+	/* PASS <password> */
+	// Check if password is correct, then set client to connected status
+	void	_PASS(Client* client, const std::string& command);
 
 	/* INVITE <nickname> [<channel>] */
+	void	_INVITE(Client* client, const std::string& command);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
+	void	_KICK(Client* client, const std::string& command);
+
 	/* MODE <nickname> {+,-}{o} */
+	void	_MODE(Client* client, const std::string& command);	
+
 	/* MSG  {<nickname> <message> */
+	void	_MSG(Client* client, const std::string& command);	
 
 	/* QUIT <quit message> */
+	void	_QUIT(Client* client, const std::string& command);	
 
 	/* NAMES [<channel>,...] */
-
+	void	_NAMES(Client* client, const std::string& command);	
 
 	/* JOIN <channel>[,...]  */
+	void	_JOIN(Client* client, const std::string& command);	
+
 	/* PART <channel>[,...] */
+	void	_PART(Client* client, const std::string& command);	
 };
 
 #endif
