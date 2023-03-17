@@ -83,10 +83,10 @@ private:
 	// Commands
 
 	/* NICK <nickname> */
-	void	_NICK(Client* client, const std::string& args);
+	void	_NICK(Client* client, const std::vector<std::string> &args);
 
 	/* USER <user> <mode> <unused> <realname> set only username to user. */
-	void	_USER(Client* client, const std::string& args);
+	void	_USER(Client* client, const  std::vector<std::string> &args);
 
 	/* PASS <password> */
 	// Check if password is correct, then set client to connected status
