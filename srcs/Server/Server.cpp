@@ -206,19 +206,3 @@ int	Server::_listen(void) const
 		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }
-
-void	Server::_join(Client const & member) const
-{
-	(void)member;
-}
-
-void	Server::_kick(Client const & member) const
-{
-	(void)member;
-}
-
-void	Server::_part(Client const & member) const
-{
-	(void)member;
-}
-

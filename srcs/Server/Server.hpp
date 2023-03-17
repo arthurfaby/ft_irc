@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <cstdlib>
 #include <unistd.h>
-#include "../Client/Client.hpp"
+#include "Client.hpp"
 #include "common.hpp"
 
 class Client;
@@ -78,46 +78,43 @@ private:
 	int					_init_listening_socket(void) const;
 	int					_bind(void) const;
 	int					_listen(void) const;
-	void				_join(Client const & member) const;
-	void				_kick(Client const & member) const;
-	void				_part(Client const & member) const;
 
 
 	// Commands
 
 	/* NICK <nickname> */
-	void	_NICK(Client* client, const std::string& command);
+	void	_NICK(Client* client, const std::string& args);
 
 	/* USER <user> <mode> <unused> <realname> set only username to user. */
-	void	_USER(Client* client, const std::string& command);
+	void	_USER(Client* client, const std::string& args);
 
 	/* PASS <password> */
 	// Check if password is correct, then set client to connected status
-	void	_PASS(Client* client, const std::string& command);
+	void	_PASS(Client* client, const std::string& args);
 
 	/* INVITE <nickname> [<channel>] */
-	void	_INVITE(Client* client, const std::string& command);
+	void	_INVITE(Client* client, const std::string& args);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
-	void	_KICK(Client* client, const std::string& command);
+	void	_KICK(Client* client, const std::string& args);
 
 	/* MODE <nickname> {+,-}{o} */
-	void	_MODE(Client* client, const std::string& command);	
+	void	_MODE(Client* client, const std::string& args);	
 
 	/* MSG  {<nickname> <message> */
-	void	_MSG(Client* client, const std::string& command);	
+	void	_MSG(Client* client, const std::string& args);	
 
 	/* QUIT <quit message> */
-	void	_QUIT(Client* client, const std::string& command);	
+	void	_QUIT(Client* client, const std::string& args);	
 
 	/* NAMES [<channel>,...] */
-	void	_NAMES(Client* client, const std::string& command);	
+	void	_NAMES(Client* client, const std::string& args);	
 
 	/* JOIN <channel>[,...]  */
-	void	_JOIN(Client* client, const std::string& command);	
+	void	_JOIN(Client* client, const std::string& args);	
 
 	/* PART <channel>[,...] */
-	void	_PART(Client* client, const std::string& command);	
+	void	_PART(Client* client, const std::string& args);	
 };
 
 #endif
