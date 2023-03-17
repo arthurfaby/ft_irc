@@ -209,20 +209,15 @@ int	Server::_listen(void) const
 
 void	Server::_join(Client const & member) const
 {
-	
+	(void)member;
 }
 
 void	Server::_kick(Client const & member) const
 {
-	
+	(void)member;
 }
 
 void	Server::_part(Client const & member) const
 {
-	
-}
-
-void	Server::_send_message(std::string const & msg) const
-{
-	
+	(void)member;
 }

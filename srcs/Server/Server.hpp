@@ -81,7 +81,27 @@ private:
 	void				_join(Client const & member) const;
 	void				_kick(Client const & member) const;
 	void				_part(Client const & member) const;
-	void				_send_message(std::string const & msg) const;
+
+
+	// Commands
+
+	/* NICK <nickname> */
+	void	_nick(Client* client, const std::string& nickname);
+
+	/* USER <user> <mode> <unused> <realname> */
+
+
+	/* INVITE */
+	/* KICK */
+	/* MODE <nickname> {+,-}{o} */
+	/* MSG */
+
+	/* QUIT <quit message> */
+
+
+	/* JOIN <channel> */
+	/* PART */
+	/* HOP ?? */
 };
 
 #endif
