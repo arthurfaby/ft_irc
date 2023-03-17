@@ -1,26 +1,32 @@
 #include "Channel.hpp"
-#include <iostream>
 
-Channel::Channel(void)
+Channel::Channel(std::string const & name, Client *client)
+	:	_name(name),
+	:	_client(client)
 {
-	std::cout << "Default constructor called" << std::endl;
-}
-
-Channel::Channel(const Channel & other)
-{
-	(void)other;
-	std::cout << "Default copy constructor called" << std::endl;
+	this->_members.push_back(client);
 }
 
 Channel::~Channel(void)
 {
-	std::cout << "Default destructor called" << std::endl;
 }
 
-Channel & Channel::operator=(const Channel & other)
+std::string	Channel::getName(void) const
 {
-	//copy operations here;
-	(void)other;
-	std::cout << "Assignment operator called" << std::endl;
-	return (*this);
+	return (this->_name);
+}
+
+const std::vector<Client*>&	Channel::getMembers(void) const
+{
+	return (this->_members);
+}
+
+void	Channel::addMember(const Client *client)
+{
+	this->_members.push_back(client);
+}
+
+void	Channel::removeMember(const Client *client)
+{
+	this->_members.push_back(client);
 }

@@ -17,18 +17,21 @@ public:
 	~Client(void);
 	Client & operator=(const Client & other);
 
+
 	// Setters
 	void			setName(const std::string& name);
 	void			setChannel(const Channel& channel);
 	void			setOp(const bool& is_op);
 
+
 	// Getters
 	const std::string&		getName(void) const;
-	const Server&	getIntroducer(void) const;
-	const int&		getSockfd(void) const;
-	Channel*		getChannel(void) const;
-	bool			isOp(void) const;
-	bool			isInChannel(void) const;
+	const Server&			getIntroducer(void) const;
+	const int&				getSockfd(void) const;
+	Channel*				getChannel(void) const;
+	bool					isOp(void) const;
+	bool					isInChannel(void) const;
+
 
 	// Methods
 	bool			joinChannel(Channel* channel);
