@@ -37,6 +37,7 @@ void	Server::sendMessage(Client* client, const std::string& message)
 	if (res == -1)
 	{
 		std::cerr << ERROR << "Send failed." << std::endl;
+		this->_disconnect_client(client);
 		return ;
 	}
 }
@@ -55,10 +56,6 @@ void	Server::run(void)
 
 		// get high-numbered socket
 		nfds = _listening_socket;
-		/* for (int i = 0; i < _clients.size(); ++i) */
-		/* 	if (_clients[i] != NULL && _clients[i]->getSockfd() > nfds) */
-		/* 		nfds = _clients[i]->getSockfd(); */
-
 		for (size_t i = 0; i < _clients.size(); ++i)
 			if (_clients[i]->getSockfd() > nfds)
 				nfds = _clients[i]->getSockfd();
@@ -78,22 +75,18 @@ void	Server::run(void)
 
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
-			/* if (_clients[i] == NULL) continue; */
-			/* if (FD_ISSET(_clients[i]->getSockfd(), &_readfds)) */
-			/* { */
-				// receive	
-			/* } */
-			if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
+					if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
 				if (res == -1)
 				{
 					std::cerr << ERROR << "Recv failed" << std::endl;
-					return ; // handle rerror
+					this->_disconnect_client(_clients[i]);
+					continue ; // handle rerror
 				}
-				buffer[res - 1] = 0; // put \0 and remove \n at the same time
+				buffer[res] = 0; // put \0
 				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
-				if (std::string(buffer) == "quit")
+				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
 					continue;
@@ -109,26 +102,6 @@ void	Server::run(void)
 			}
 				// receive
 		}
-
-/* 		for (size_t i = 0; i < _clients.size(); ++i) */
-/* 		{ */
-/* 			/1* if (_clients[i] == NULL) continue; *1/ */
-/* 			/1* if (FD_ISSET(_clients[i]->getSockfd(), &_writefds)) *1/ */
-/* 				// send */
-
-/* 			if (FD_ISSET(_clients[i], &_writefds)) */
-/* 			{ */
-/* 				res = send(_clients[i], "Yes mon bro\n", 12, 0); */
-/* 				if (res == -1) */
-/* 				{ */
-/* 					std::cerr << "[ERROR] Send failed." << std::endl; */
-/* 					return ; */
-/* 				} */
-/* 				/1* std::cout << "[LOG] Message sent." << std::endl; *1/ */
-/* 				/1* close(_clients[i]); *1/ */
-/* 			} */
-/* 				// send */
-/* 		} */
 	}
 }
 
@@ -144,7 +117,7 @@ void	Server::_disconnect_client(Client* client)
 		if (*it == client)
 		{
 			std::cout << LOG << "Client " << client->getName() << " has just been disconnect." << std::endl;
-			this->sendMessage(client, "You have been disconnected by server.");
+			//this->sendMessage(client, "You have been disconnected by server.");
 			close(client->getSockfd());
 			_clients.erase(it);
 			return ;
@@ -162,7 +135,7 @@ void	Server::_new_client_connection(void)
 		std::cerr << ERROR << "Accept failed." << std::endl;
 		return ; // handle error
 	}
-	Client*	new_client = new Client(*this, client_socket);
+	Client*	new_client = new Client(client_socket);
 	std::cout << LOG << "New client (" << client_socket << ")" << std::endl;
 	_clients.push_back(new_client);
 	this->sendMessage(new_client, "Connected to server.\n");
@@ -178,15 +151,9 @@ void	Server::_init_selectfds(void)
 	FD_SET(_listening_socket, &_exceptfds);
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		/* if (_clients[i] != NULL) */
-		/* { */
-			FD_SET(_clients[i]->getSockfd(), &_readfds);
-			FD_SET(_clients[i]->getSockfd(), &_writefds);
-			FD_SET(_clients[i]->getSockfd(), &_exceptfds);
-			/* FD_SET(_clients[i]->getSockfd(), &_readfds); */
-			/* FD_SET(_clients[i]->getSockfd(), &_writefds); */
-			/* FD_SET(_clients[i]->getSockfd(), &_exceptfds); */
-		/* } */
+		FD_SET(_clients[i]->getSockfd(), &_readfds);
+		FD_SET(_clients[i]->getSockfd(), &_writefds);
+		FD_SET(_clients[i]->getSockfd(), &_exceptfds);
 	}
 	
 }
