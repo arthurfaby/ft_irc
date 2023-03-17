@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <cstdlib>
 #include <unistd.h>
-#include "../Client/Client.hpp"
+#include "Client.hpp"
 #include "common.hpp"
 
 class Client;
@@ -65,6 +65,8 @@ private:
 	int						_reply_code;
 	int						_listening_socket;
 	std::vector<Client *>		_clients; // temp attributs of sockets waiting for Client class
+	std::string		_cmds[11];
+	void	(Server::*_commands_funcs[11])(Client *client, std::vector<std::string> & command);
 	/* std::vector<Client*>	_clients; */
 	struct sockaddr_in		_address;
 	fd_set					_readfds;
@@ -78,46 +80,47 @@ private:
 	int					_init_listening_socket(void) const;
 	int					_bind(void) const;
 	int					_listen(void) const;
-	void				_join(Client const & member) const;
-	void				_kick(Client const & member) const;
-	void				_part(Client const & member) const;
+	void				_init_cmds(void);
+	void				_init_commands_funcs(void);
 
 
 	// Commands
+	void	_call_cmd(std::vector<std::string> & args, Client *client);
+	void	_parse_cmd_args(std::string args, Client *client);
 
 	/* NICK <nickname> */
-	void	_NICK(Client* client, const std::string& command);
+	void	_NICK(Client* client, std::vector<std::string> & command);
 
 	/* USER <user> <mode> <unused> <realname> set only username to user. */
-	void	_USER(Client* client, const std::string& command);
+	void	_USER(Client* client, std::vector<std::string> & command);
 
 	/* PASS <password> */
 	// Check if password is correct, then set client to connected status
-	void	_PASS(Client* client, const std::string& command);
+	void	_PASS(Client* client, std::vector<std::string> & command);
 
 	/* INVITE <nickname> [<channel>] */
-	void	_INVITE(Client* client, const std::string& command);
+	void	_INVITE(Client* client, std::vector<std::string> & command);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
-	void	_KICK(Client* client, const std::string& command);
+	void	_KICK(Client* client, std::vector<std::string> & command);
 
 	/* MODE <nickname> {+,-}{o} */
-	void	_MODE(Client* client, const std::string& command);	
+	void	_MODE(Client* client, std::vector<std::string> & command);	
 
 	/* MSG  {<nickname> <message> */
-	void	_MSG(Client* client, const std::string& command);	
+	void	_MSG(Client* client, std::vector<std::string> & command);	
 
 	/* QUIT <quit message> */
-	void	_QUIT(Client* client, const std::string& command);	
+	void	_QUIT(Client* client, std::vector<std::string> & command);	
 
 	/* NAMES [<channel>,...] */
-	void	_NAMES(Client* client, const std::string& command);	
+	void	_NAMES(Client* client, std::vector<std::string> & command);	
 
 	/* JOIN <channel>[,...]  */
-	void	_JOIN(Client* client, const std::string& command);	
+	void	_JOIN(Client* client, std::vector<std::string> & command);	
 
 	/* PART <channel>[,...] */
-	void	_PART(Client* client, const std::string& command);	
+	void	_PART(Client* client, std::vector<std::string> & command);	
 };
 
 #endif

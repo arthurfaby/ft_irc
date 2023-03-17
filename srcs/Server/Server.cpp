@@ -10,7 +10,10 @@ Server::Server(char *port, char *password) :
 {
 	/* Init address of the server */
 	_address = _init_address();
-
+	/* Init commands array */
+	this->_init_cmds();
+	/* Init commands functions pointer array */
+	this->_init_commands_funcs();
 	/* Init listening socket */
 	_listening_socket = _init_listening_socket();
 	if (_listening_socket == -1)
@@ -21,7 +24,6 @@ Server::Server(char *port, char *password) :
 
 	if (this->_listen() == -1)
 		return ; // throw exception ? and close sockets
-	
 }
 
 
@@ -85,6 +87,7 @@ void	Server::run(void)
 					continue ; // handle rerror
 				}
 				buffer[res] = 0; // put \0
+				this->_parse_cmd_args(buffer, _clients[i]);
 				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
@@ -92,8 +95,6 @@ void	Server::run(void)
 					continue;
 				}
 				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
-
-
 			}
 
 			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
@@ -102,6 +103,40 @@ void	Server::run(void)
 			}
 				// receive
 		}
+	}
+}
+
+void	Server::_parse_cmd_args(std::string args, Client *client)
+{
+	std::vector<std::string>	parsed_args;
+	size_t 						start = 0;
+	size_t						end = args.find(' ', start);
+	size_t						pos = args.find_first_not_of(" \t\n\r");
+	
+	if (pos != std::string::npos)
+		args.erase(0, pos);
+	pos = args.find_last_not_of(" \t\n\r");
+	if (pos != std::string::npos)
+		args.erase(pos + 1);
+	for (size_t i = 0; i < args.size(); i++)
+		args[i] = tolower(args[i]);
+	while (end != std::string::npos)
+	{
+		end = args.find(' ', start);
+		parsed_args.push_back(args.substr(start, end - start));
+		start = end + 1;
+	}
+	parsed_args.push_back(args.substr(start));
+	//compter les args
+	this->_call_cmd(parsed_args, client);
+}
+
+void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
+{
+	for (int i = 0; i < 11; i++)
+	{
+		if (args[0].compare(this->_cmds[i]) == 0)
+			(this->*_commands_funcs[i])(client, args);
 	}
 }
 
@@ -207,18 +242,98 @@ int	Server::_listen(void) const
 	return (listen_value);
 }
 
-void	Server::_join(Client const & member) const
+void	Server::_NICK(Client* client, std::vector<std::string> & command)
 {
-	(void)member;
+	(void)client;
+	(void)command;
 }
 
-void	Server::_kick(Client const & member) const
+void	Server::_USER(Client* client, std::vector<std::string> & command)
 {
-	(void)member;
+	(void)client;
+	(void)command;
 }
 
-void	Server::_part(Client const & member) const
+void	Server::_PASS(Client* client, std::vector<std::string> & command)
 {
-	(void)member;
+	(void)client;
+	(void)command;
 }
 
+void	Server::_INVITE(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_KICK(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_MODE(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_MSG(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_QUIT(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_NAMES(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_JOIN(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_PART(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_init_commands_funcs(void)
+{
+	this->_commands_funcs[0] = (&Server::_NICK);
+	this->_commands_funcs[1] = (&Server::_USER);
+	this->_commands_funcs[2] = (&Server::_PASS);
+	this->_commands_funcs[3] = (&Server::_INVITE);
+	this->_commands_funcs[4] = (&Server::_KICK);
+	this->_commands_funcs[5] = (&Server::_MODE);
+	this->_commands_funcs[6] = (&Server::_MSG);
+	this->_commands_funcs[7] = (&Server::_QUIT);
+	this->_commands_funcs[8] = (&Server::_NAMES);
+	this->_commands_funcs[9] = (&Server::_JOIN);
+	this->_commands_funcs[10] = (&Server::_PART);
+}
+
+void	Server::_init_cmds(void)
+{
+	this->_cmds[0] = "nick";
+	this->_cmds[1] = "user";
+	this->_cmds[2] = "pass";
+	this->_cmds[3] = "invite";
+	this->_cmds[4] = "kick";
+	this->_cmds[5] = "mode";
+	this->_cmds[6] = "msg";
+	this->_cmds[7] = "quit";
+	this->_cmds[8] = "names";
+	this->_cmds[9] = "join";
+	this->_cmds[10] = "part";
+}
