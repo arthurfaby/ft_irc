@@ -90,18 +90,19 @@ private:
 
 	/* USER <user> <mode> <unused> <realname> */
 
+	/* INVITE <nickname> [<channel>] */
 
-	/* INVITE */
-	/* KICK */
+	/* KICK <channel>[,...] <user> [<comment>]*/
 	/* MODE <nickname> {+,-}{o} */
-	/* MSG */
+	/* MSG  {<nickname> <message> */
 
 	/* QUIT <quit message> */
 
+	/* NAMES [<channel>,...] */
 
-	/* JOIN <channel> */
-	/* PART */
-	/* HOP ?? */
+
+	/* JOIN <channel>[,...]  */
+	/* PART <channel>[,...] */
 };
 
 #endif
