@@ -4,11 +4,11 @@
 #include <vector>
 #include <iostream>
 #include <sys/socket.h>
-/* #include <sys/time.h> */
 #include <netinet/in.h>
 #include <cstdlib>
 #include <unistd.h>
 #include "../Client/Client.hpp"
+#include "common.hpp"
 
 class Client;
 
@@ -18,11 +18,8 @@ class Server
 public:
 
 	//constructors / destructors / assignation
-	//Server(void);
 	Server(char *port, char *password);
-	Server(const Server & other);
 	~Server(void);
-	//Server & operator=(const Server & other);
 
 	//getters / setters
 	int					getPort(void) const;
@@ -47,6 +44,7 @@ public:
 	/* void				setClient(const Client & client); */
 
 	//methods
+	void				sendMessage(Client* client, const std::string& message);
 	void				create_new_client_socket(void) const;
 	void				read_on_socket(int );
 	void				write_to_socket(int socket);
@@ -73,6 +71,7 @@ private:
 	fd_set					_writefds;
 	fd_set					_exceptfds;
 
+	void				_disconnect_client(Client* client);
 	void				_new_client_connection(void);
 	void				_init_selectfds(void);
 	struct sockaddr_in	_init_address(void) const;

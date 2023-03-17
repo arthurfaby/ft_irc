@@ -1,10 +1,5 @@
 #include "Server.hpp"
 
-/*Server::Server(void)
-{
-	std::cout << "Default constructor called" << std::endl;
-}*/
-
 Server::Server(char *port, char *password) :
 	_port(std::atoi(port)),
 	_name("ircserver"),
@@ -29,48 +24,22 @@ Server::Server(char *port, char *password) :
 	
 }
 
-Server::Server(const Server & other) :
-	_port(0),
-	_name("")
-	/* _port(other.getPort()), */
-	/* _name(other.getName()), */
-	/* _password(other.getPassword()), */
-	/* _nb_client(other.getNbClient()), */
-	/* _reply_code(other.getReplyCode()), */
-	/* _listening_socket(other.getListeningSocket()) */
-{
-	(void)other;
-}
 
 Server::~Server(void)
 {
 }
 
-/*Server & Server::operator=(const Server & other)
+void	Server::sendMessage(Client* client, const std::string& message)
 {
-	//copy operations here;
-	(void)other;
-	return (*this);
-}*/
+	int	res;
 
-/*
-
-	GETTERS AND SETTERS
-
-*/
-
-/* int	Server::getPort(void) const */
-/* { */
-/* 	return (_port); */
-/* } */
-
-/* void	Server::setPort(const int& port) */
-/* { */
-/* 	_port = port; */
-/* } */
-
-/* int	Server::getNbClient( */
-
+	res = send(client->getSockfd(), message.c_str(), message.length(), 0);
+	if (res == -1)
+	{
+		std::cerr << ERROR << "Send failed." << std::endl;
+		return ;
+	}
+}
 
 void	Server::run(void)
 {
@@ -98,7 +67,7 @@ void	Server::run(void)
 		select_res = select(nfds + 1, &_readfds, &_writefds, &_exceptfds, NULL);
 		if (select_res == -1)
 		{
-			std::cerr << "[ERROR] Select failed" << std::endl;
+			std::cerr << ERROR << "Select failed" << std::endl;
 			return ; // throw exception ?
 		}
 
@@ -119,18 +88,24 @@ void	Server::run(void)
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
 				if (res == -1)
 				{
-					std::cerr << "[ERROR] Recv failed" << std::endl;
+					std::cerr << ERROR << "Recv failed" << std::endl;
 					return ; // handle rerror
 				}
-				buffer[res] = 0;
-				std::cout << "[LOG] Message received from " << _clients[i]->getName() << ": '" << buffer << "'" << std::endl;
-				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
-				if (res == -1)
+				buffer[res - 1] = 0; // put \0 and remove \n at the same time
+				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				if (std::string(buffer) == "quit")
 				{
-					std::cerr << "[ERROR] Send failed." << std::endl;
-					return ;
+					this->_disconnect_client(_clients[i]);
+					continue;
 				}
+				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
 
+
+			}
+
+			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
+			{
+				this->_disconnect_client(_clients[i]);
 			}
 				// receive
 		}
@@ -157,6 +132,26 @@ void	Server::run(void)
 	}
 }
 
+void	Server::_disconnect_client(Client* client)
+{
+	std::vector<Client*>::iterator	it;
+	std::vector<Client*>::iterator	ite;
+
+	it = _clients.begin();
+	ite = _clients.end();
+	for (; it != ite; ++it)
+	{
+		if (*it == client)
+		{
+			std::cout << LOG << "Client " << client->getName() << " has just been disconnect." << std::endl;
+			this->sendMessage(client, "You have been disconnected by server.");
+			close(client->getSockfd());
+			_clients.erase(it);
+			return ;
+		}
+	}
+}
+
 void	Server::_new_client_connection(void)
 {
 	int	client_socket;
@@ -164,12 +159,13 @@ void	Server::_new_client_connection(void)
 	client_socket = accept(_listening_socket, NULL, NULL); // pas sur de ca
 	if (client_socket == -1)
 	{
-		std::cerr << "[ERROR] Accept failed." << std::endl;
+		std::cerr << ERROR << "Accept failed." << std::endl;
 		return ; // handle error
 	}
 	Client*	new_client = new Client(*this, client_socket);
-	std::cout << "[LOG] New client (" << client_socket << ")" << std::endl;
+	std::cout << LOG << "New client (" << client_socket << ")" << std::endl;
 	_clients.push_back(new_client);
+	this->sendMessage(new_client, "Connected to server.\n");
 }
 
 void	Server::_init_selectfds(void)
@@ -208,19 +204,19 @@ struct sockaddr_in	Server::_init_address() const
 int Server::_init_listening_socket(void) const
 {
 	int	new_listening_socket;
-	/* int	opt; */
+	int	opt(-1);
 
 	new_listening_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (new_listening_socket < 0)
 	{
-		std::cerr << "[ERROR] Socket failed." << std::endl;
+		std::cerr << ERROR << "Socket failed." << std::endl;
 		return (-1);
 	}
-	/* if (setsockopt(new_listening_socket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) != 0) */
-	/* { */
-	/* 	std::cerr << "[ERROR] Setsockopt failed." << std::endl; */
-	/* 	return (-1); */
-	/* } */
+	if (setsockopt(new_listening_socket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) != 0)
+	{
+		std::cerr << ERROR << "Setsockopt failed." << std::endl;
+		return (-1);
+	}
 	return (new_listening_socket);
 }
 
@@ -230,7 +226,7 @@ int	Server::_bind(void) const
 
 	bind_value = bind(_listening_socket, (struct sockaddr*)&_address, sizeof(struct sockaddr));
 	if (bind_value == -1)
-		std::cerr << "[ERROR] Bind failed." << std::endl;
+		std::cerr << ERROR << "Bind failed." << std::endl;
 	return (bind_value);
 }
 
@@ -240,6 +236,6 @@ int	Server::_listen(void) const
 
 	listen_value = listen(_listening_socket, 10);
 	if (listen_value == -1)
-		std::cerr << "[ERROR] Listen failed." << std::endl;
+		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }

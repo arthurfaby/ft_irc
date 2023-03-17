@@ -1,32 +1,17 @@
 #include "Client.hpp"
 
-/*Client::Client(void) : 
-_introducer(NULL)
-_sockfd(0), 
-_is_op(false),
-_name("default"),
-_channels(NULL)
-
-{}*/
-
 Client::Client(const Server& introducer, const int& sockfd) : 
-_name("default"),
-_introducer(introducer), 
-_sockfd(sockfd), 
-_channels(std::vector<Channel *>()),
-_is_op(false)
-{}
-
-Client::Client(const Client & other) :
-_name(other._name),
-_introducer(other._introducer),
-_sockfd(other._sockfd),
-_channels(other._channels),
-_is_op(other._is_op)
-{}
+	_name("default"),
+	_introducer(introducer), 
+	_sockfd(sockfd), 
+	_channels(std::vector<Channel *>()),
+	_is_op(false)
+{
+}
 
 Client::~Client(void)
-{}
+{
+}
 
 Client & Client::operator=(const Client & other)
 {
@@ -49,5 +34,8 @@ const std::string&	Client::getName(void)const
 }
 
 
-bool	sendMessageToClient(const Client& other)
-{}
+bool	Client::sendMessageToClient(const Client& other)
+{
+	(void)other;
+	return true;
+}

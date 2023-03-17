@@ -6,7 +6,7 @@
 #    By: blevrel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/14 13:25:04 by blevrel           #+#    #+#              #
-#    Updated: 2023/03/16 19:28:06 by pirabaud         ###   ########.fr        #
+#    Updated: 2023/03/17 11:34:47 by afaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,10 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
-HEAD  = -I srcs/Command -I srcs/Server -I srcs/Client -I srcs/Channel -I srcs/User -I srcs/Operator
+HEAD  =	-I srcs/Server \
+		-I srcs/Client \
+		-I srcs/Channel \
+		-I includes/
 
 RM = rm -f
 
@@ -37,10 +40,13 @@ fclean: clean
 
 re: fclean all
 
+run: re
+	./ircserv 6666 password
+
 .cpp.o:
 	${CC} ${CFLAGS} ${HEAD} -c $< -o ${<:.cpp=.o}
 
 ${NAME}:${OBJS}
 	${CC} ${CFLAGS} ${OBJS} ${HEAD} -o ${NAME}
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re run
