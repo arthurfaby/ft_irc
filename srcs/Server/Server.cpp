@@ -221,3 +221,4 @@ void	Server::_part(Client const & member) const
 {
 	(void)member;
 }
+
