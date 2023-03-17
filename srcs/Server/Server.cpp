@@ -85,15 +85,16 @@ void	Server::run(void)
 					continue ; // handle rerror
 				}
 				buffer[res] = 0; // put \0
+				buffer[res - 1] = 0; // put \0
+				std::string tmp = buffer;
+				if (tmp.substr(0, tmp.find(' ')) == "USER")
+					_USER(_clients[i], tmp.substr(tmp.find(' ') + 1));
 				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
 					continue;
 				}
-				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
-
-
 			}
 
 			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))

@@ -64,8 +64,7 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::vector<Client *>		_clients; // temp attributs of sockets waiting for Client class
-	/* std::vector<Client*>	_clients; */
+	std::vector<Client *>	_clients; // temp attributs of sockets waiting for Client class
 	struct sockaddr_in		_address;
 	fd_set					_readfds;
 	fd_set					_writefds;
