@@ -2,7 +2,7 @@
 #define CHANNEL_HPP
 
 #include <vector>
-#include <string>
+#include <iostream>
 #include "Client.hpp"
 
 class Client;
