@@ -37,6 +37,7 @@ void	Server::sendMessage(Client* client, const std::string& message)
 	if (res == -1)
 	{
 		std::cerr << ERROR << "Send failed." << std::endl;
+		this->_disconnect_client(client);
 		return ;
 	}
 }
@@ -89,11 +90,12 @@ void	Server::run(void)
 				if (res == -1)
 				{
 					std::cerr << ERROR << "Recv failed" << std::endl;
-					return ; // handle rerror
+					this->_disconnect_client(_clients[i]);
+					continue ; // handle rerror
 				}
-				buffer[res - 1] = 0; // put \0 and remove \n at the same time
+				buffer[res] = 0; // put \0
 				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
-				if (std::string(buffer) == "quit")
+				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
 					continue;
@@ -144,7 +146,7 @@ void	Server::_disconnect_client(Client* client)
 		if (*it == client)
 		{
 			std::cout << LOG << "Client " << client->getName() << " has just been disconnect." << std::endl;
-			this->sendMessage(client, "You have been disconnected by server.");
+			//this->sendMessage(client, "You have been disconnected by server.");
 			close(client->getSockfd());
 			_clients.erase(it);
 			return ;
