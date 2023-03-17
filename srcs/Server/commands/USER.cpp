@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void	Server::_USER(Client* client, const std::string& args)
+void	Server::_USER(Client* client, const std::vector<std::string>& args)
 {
 	std::string	username;
 
@@ -10,7 +10,7 @@ void	Server::_USER(Client* client, const std::string& args)
 		this->sendMessage(client, "You may not reregister.\n");
 		return ;
 	}
-	username = args.substr(0, args.find(' '));	
+	username = args[0];	
 	if (username.length() > 9)
 	{
 		this->sendMessage(client, "Your username is too long (max 9 characters).\n");
