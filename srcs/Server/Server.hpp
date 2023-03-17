@@ -64,10 +64,9 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::vector<Client *>		_clients; // temp attributs of sockets waiting for Client class
-	std::string		_cmds[11];
-	void	(Server::*_commands_funcs[11])(Client *client, std::vector<std::string> & command);
-	/* std::vector<Client*>	_clients; */
+	std::string				_cmds[11];
+	void					(Server::*_commands_funcs[11])(Client *client, std::vector<std::string> & command);
+	std::vector<Client *>	_clients; // temp attributs of sockets waiting for Client class
 	struct sockaddr_in		_address;
 	fd_set					_readfds;
 	fd_set					_writefds;
@@ -82,7 +81,6 @@ private:
 	int					_listen(void) const;
 	void				_init_cmds(void);
 	void				_init_commands_funcs(void);
-
 
 	// Commands
 	void	_call_cmd(std::vector<std::string> & args, Client *client);

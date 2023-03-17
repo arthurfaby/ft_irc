@@ -6,17 +6,18 @@
 #    By: blevrel <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/14 13:25:04 by blevrel           #+#    #+#              #
-#    Updated: 2023/03/17 14:10:44 by blevrel          ###   ########.fr        #
+#    Updated: 2023/03/17 19:15:44 by blevrel          ###   ########.fr        #
 #    Updated: 2023/03/17 11:34:47 by afaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 
-SRCS =	srcs/main.cpp				\
-		srcs/Server/Server.cpp		\
-		srcs/Client/Client.cpp		\
-		srcs/Channel/Channel.cpp
+SRCS =	srcs/main.cpp					\
+		srcs/Server/Server.cpp			\
+		srcs/Client/Client.cpp			\
+		srcs/Channel/Channel.cpp		\
+		#srcs/Server/commands/USER.cpp	\
 
 
 OBJS = ${SRCS:.cpp=.o}
