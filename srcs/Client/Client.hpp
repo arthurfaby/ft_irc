@@ -17,6 +17,7 @@ public:
 	void			setName(const std::string& name);
 	void			setPass(const bool& pass);
 	void			setRegister(const bool& is_register);
+	void			setNickname(const std::string& nickname);
 
 
 	// Getters
@@ -24,12 +25,12 @@ public:
 	const std::string&		getName(void) const;
 	const int&				getSockfd(void) const;
 	const bool&				isRegister(void) const;
+	const std::string&		getNickname(void)const;
 
-private:
-
-	std::string				_name;			// Unique nickname of the client (max 9 characters)
-	const int				_sockfd;		// fd which referred to the client socket
-	bool					_pass;			// true if client entererd password, false otherwise
+	std::string				_name;		// Unique name of the client (max 9 characters)
+	std::string				_nickname;
+	const int				_sockfd;	// fd which referred to the client socket
+	bool					_pass;		// true if client entererd password, false otherwise
 	bool					_is_register;	// true if client used 'USER' command to register
 
 };
