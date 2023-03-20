@@ -19,14 +19,14 @@ void	Server::_USER(Client* client, std::vector<std::string>& args)
 	username = args[1];	
 	if (username.length() > 9)
 	{
-		this->sendMessage(client, "\e[91m[ERROR] : Your username is too long (max 9 characters).\n");
+		this->sendMessage(client, "[ERROR] : Your username is too long (max 9 characters).\n");
 		return ;
 	}
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
 		if (_clients[i]->getName() == username)
 		{
-			this->sendMessage(client, "Username is already in use.\n");
+			this->sendMessage(client, "[ERROR] : Your username is already used.\n");
 			return ;
 		}
 	}

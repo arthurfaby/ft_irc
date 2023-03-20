@@ -86,6 +86,8 @@ void	Server::run(void)
 					else
 						std::cerr << ERROR << "Recv nothing" << std::endl;
 					this->_disconnect_client(_clients[i]);
+					if (_clients[i]->getPass())
+						std::cout << "pass" << std::endl;
 					continue ; // handle rerror
 				}
 				buffer[res] = 0; // put \0
@@ -284,25 +286,6 @@ int	Server::_listen(void) const
 		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }
-
-void	Server::_NICK(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_PASS(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_INVITE(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
 void	Server::_KICK(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
@@ -322,12 +305,6 @@ void	Server::_MSG(Client* client, std::vector<std::string> & command)
 }
 
 void	Server::_NAMES(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
