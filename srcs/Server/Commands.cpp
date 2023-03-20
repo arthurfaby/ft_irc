@@ -60,6 +60,11 @@ void	Server::_NICK(Client* client, std::vector<std::string> &args)
 			this->sendMessage(client, "your nickname is too long\n");
 			return;
 		}
+		if (username[0] == '#')
+		{
+			this->sendMessage(client, "[ERROR] : Your nickname can't begin with '#'.\n");
+			return ;
+		}
 		for (size_t i = 0; i != _clients.size(); i++)
 		{
 			if (args[1] == _clients[i]->getNickname())
