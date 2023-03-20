@@ -2,19 +2,38 @@
 
 void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 {
-		if(command.size() != 2)
+	std::vector<std::string>	copy(command);
+	std::vector<std::string>	channels;
+	size_t						pos;
+
+	if(command.size() != 2)
 			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+	pos = copy[1].find(',');
+	while (pos != std::string::npos)
+	{
+		channels.push_back(copy[1].substr(0, pos));
+		copy[1].erase(0, pos + 1);
+		pos = copy[1].find(',');
+	}
+	channels.push_back(copy[1]);
+
+	
+	for (size_t i = 0; i < channels.size(); ++i)
+	{
 		for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-		if (command[1] == (*it)->getName())
 		{
-			(*it)->addMember(client);
-			//msg a tous les membre du channel;
-			return;
+			if (channels[i] == (*it)->getName())
+			{
+				(*it)->addMember(client);
+				//msg a tous les membre du channel;
+				return;
+			}
+			if(channels[i][0] != '#')
+				this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
 		}
-		if(command[1][0] != '#')
-			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
 			
-	_channels.push_back(new Channel(command[1], client));
+		_channels.push_back(new Channel(command[1], client));
+	}
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		std::cout << (*it)->getName() << std::endl;
 }
@@ -33,7 +52,7 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "usage: INVITE <nick> <channel>");
 	}
 	for (; itsClient != _clients.end(); itsClient++) 
-		if (command[1] == (*itsClient)->getName())
+		if (command[1] == (*itsClient)->getNickname())
 			break;
 	if (itsClient == _clients.end())
 	{
@@ -42,7 +61,7 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 	}
 
 	for (; it != _channels.end(); it++)
-		if (command[2] == (*it)->getName())
+		if (command[2] == (*it)->getNickname())
 		{
 			itsOperator = (*it)->getOperators().begin();
 			iteOperator = (*it)->getOperators().end();
@@ -54,9 +73,9 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 		return;
 	}
 		for (; itsOperator != iteOperator; itsOperator++)
-		if (client->getName() == (*itsOperator)->getName())
+		if (client->getNickname() == (*itsOperator)->getNickname())
 		{
-			invit = client->getName();
+			invit = client->getNickname();
 			invit += " invites you in the channel ";
 			invit += command[1];	
 			invit += " /join ";
@@ -69,15 +88,12 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 
 void	Server::_NICK(Client* client, std::vector<std::string> &args)
 {
+		std::cout << args[1] << std::endl;
+		/*std::cout << args[1].length() << std::endl;*/
 		if (args[1].length() > 9)
 		{
 			this->sendMessage(client, "your nickname is too long\n");
 			return;
-		}
-		if (args[1][0] == '#')
-		{
-			this->sendMessage(client, "[ERROR] : Your nickname can't begin with '#'.\n");
-			return ;
 		}
 		for (size_t i = 0; i != _clients.size(); i++)
 		{
@@ -95,3 +111,15 @@ void	Server::_PASS(Client* client, std::vector<std::string> & args)
 	if(args[1] == _password)
 		client->setPass(true);
 }
+
+void	Server::_MODE(Client* client, std::vector<std::string> & command)
+{
+	if (command.size() != 5)
+		this->sendMessage("usage: mode -o <nick> <channel>");
+	if(command[1] != "-o")
+		this->sendMessage("usage: mode -o <nick> <channel>");
+	 
+
+}
+
+

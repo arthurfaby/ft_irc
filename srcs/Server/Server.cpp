@@ -92,7 +92,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				//std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
@@ -292,12 +292,6 @@ void	Server::_KICK(Client* client, std::vector<std::string> & command)
 	(void)command;
 }
 
-void	Server::_MODE(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
 void	Server::_MSG(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
@@ -305,6 +299,12 @@ void	Server::_MSG(Client* client, std::vector<std::string> & command)
 }
 
 void	Server::_NAMES(Client* client, std::vector<std::string> & command)
+{
+	(void)client;
+	(void)command;
+}
+
+void	Server::_PART(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
