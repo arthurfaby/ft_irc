@@ -127,6 +127,8 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		start = end + 1;
 	}
 	parsed_args.push_back(args.substr(start));
+	for (size_t i = 0; i < parsed_args.size(); i++)
+		std::cout << i << " : '" << parsed_args[i] << "'" << std::endl;
 	//compter les args
 	this->_call_cmd(parsed_args, client);
 }
@@ -243,12 +245,6 @@ int	Server::_listen(void) const
 }
 
 void	Server::_NICK(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_USER(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
