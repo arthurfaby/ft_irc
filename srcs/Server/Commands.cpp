@@ -2,6 +2,8 @@
 
 void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 {
+		if(command.size() != 2)
+			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
 		for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		if (command[1] == (*it)->getName())
 		{
@@ -9,6 +11,9 @@ void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 			//msg a tous les membre du channel;
 			return;
 		}
+		if(command[1][0] != '#')
+			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+			
 	_channels.push_back(new Channel(command[1], client));
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		std::cout << (*it)->getName() << std::endl;
@@ -22,22 +27,33 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 	std::vector<Channel *>::iterator it = _channels.begin();
 	std::string	invit;
 
+	std::cout << command.size() << std::endl;
+	if (command.size() != 3)
+	{
+		this->sendMessage(client, "usage: INVITE <nick> <channel>");
+	}
+	for (; itsClient != _clients.end(); itsClient++) 
+		if (command[1] == (*itsClient)->getName())
+			break;
+	if (itsClient == _clients.end())
+	{
+		this->sendMessage(client, "Client not found\n");
+		return;
+	}
 
 	for (; it != _channels.end(); it++)
-		if (command[1] == (*it)->getName())
+		if (command[2] == (*it)->getName())
 		{
 			itsOperator = (*it)->getOperators().begin();
 			iteOperator = (*it)->getOperators().end();
 			break;
 		}
 	if (it == _channels.end())
+	{
 		this->sendMessage(client, "Channel not found\n");
-	for (; itsClient != _clients.end(); itsClient++) 
-		if (command[2] == (*itsClient)->getName())
-			break;
-	if (itsClient == _clients.end())
-		this->sendMessage(client, "Client not found\n");
-	for (; itsOperator != iteOperator; itsOperator++)
+		return;
+	}
+		for (; itsOperator != iteOperator; itsOperator++)
 		if (client->getName() == (*itsOperator)->getName())
 		{
 			invit = client->getName();
