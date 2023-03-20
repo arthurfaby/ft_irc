@@ -21,6 +21,9 @@ class Channel
 		void						addOperator(Client *client);
 		void						removeMember(const Client *client);
 
+		bool						isIn(const std::string& name) const;
+		bool						isOp(const std::string& name) const;
+
 	private:
 
 		const std::string		_name;

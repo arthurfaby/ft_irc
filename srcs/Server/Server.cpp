@@ -339,3 +339,35 @@ void	Server::_init_cmds(void)
 	this->_cmds[9] = "join";
 	this->_cmds[10] = "part";
 }
+
+bool	Server::_doesChannelExists(const std::string& name) const
+{
+	for  (size_t i = 0; i < _channels.size(); ++i)
+		if (name == _channels[i]->getName())
+			return (true);
+	return (false);
+}
+
+bool	Server::_doesClientExists(const std::string& name) const
+{
+	for (size_t i = 0; i < _clients.size(); ++i)
+		if (_clients[i]->getName() == name)
+			return (true);
+	return (false);
+}
+
+Channel*	Server::_getChannel(const std::string& name)
+{
+	for  (size_t i = 0; i < _channels.size(); ++i)
+		if (name == _channels[i]->getName())
+			return (_channels[i]);
+	return (NULL);
+}
+
+Client*	Server::_getClient(const std::string& name)
+{
+	for  (size_t i = 0; i < _clients.size(); ++i)
+		if (name == _clients[i]->getName())
+			return (_clients[i]);
+	return (NULL);
+}
