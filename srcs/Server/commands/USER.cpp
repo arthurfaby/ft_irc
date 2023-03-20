@@ -22,6 +22,11 @@ void	Server::_USER(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Your username is too long (max 9 characters).\n");
 		return ;
 	}
+	if (username[0] == '#')
+	{
+		this->sendMessage(client, "[ERROR] : Your username can't begin with '#'.\n");
+		return ;
+	}
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
 		if (_clients[i]->getName() == username)

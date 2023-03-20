@@ -7,7 +7,8 @@ SRCS =	srcs/main.cpp					\
 		srcs/Channel/Channel.cpp		\
 		srcs/Server/commands/USER.cpp	\
 		srcs/Server/commands/QUIT.cpp   \
-		srcs/Server/Commands.cpp	\
+		srcs/Server/commands/PART.cpp   \
+		srcs/Server/Commands.cpp		\
 
 OBJS = ${SRCS:.cpp=.o}
 
