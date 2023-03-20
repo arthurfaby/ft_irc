@@ -74,15 +74,17 @@ void	Server::run(void)
 		if (FD_ISSET(_listening_socket, &_readfds))
 			_new_client_connection();
 			// new connection
-
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
 					if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
-				if (res == -1)
+				if (res == -1 || res == 0)
 				{
-					std::cerr << ERROR << "Recv failed" << std::endl;
+					if (res == -1)
+						std::cerr << ERROR << "Recv failed" << std::endl;
+					else
+						std::cerr << ERROR << "Recv nothing" << std::endl;
 					this->_disconnect_client(_clients[i]);
 					continue ; // handle rerror
 				}
@@ -94,7 +96,6 @@ void	Server::run(void)
 					this->_disconnect_client(_clients[i]);
 					continue;
 				}
-				res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
 			}
 
 			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
@@ -113,6 +114,8 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	size_t						end;
 	size_t						pos = args.find_first_not_of(" ");
 	
+	if (args.size() <= 2)
+		return ;
 	args.resize(args.size() - 2);
 	if (pos != std::string::npos)
 		args.erase(0, pos);
@@ -284,12 +287,6 @@ void	Server::_MODE(Client* client, std::vector<std::string> & command)
 }
 
 void	Server::_MSG(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_QUIT(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;

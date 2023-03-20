@@ -5,6 +5,11 @@ void	Server::_USER(Client* client, std::vector<std::string>& args)
 	std::string	username;
 
 	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
+	if (args.size() != 5)
+	{
+		this->sendMessage(client, "[ERROR] : Usage : /user <user> <mode> <unused> <realname>\n");
+		return ;
+	}
 	if (client->isRegister())
 	{
 		this->sendMessage(client, "You may not reregister.\n");
@@ -13,7 +18,7 @@ void	Server::_USER(Client* client, std::vector<std::string>& args)
 	username = args[1];	
 	if (username.length() > 9)
 	{
-		this->sendMessage(client, "Your username is too long (max 9 characters).\n");
+		this->sendMessage(client, "\e[91m[ERROR] : Your username is too long (max 9 characters).\n");
 		return ;
 	}
 	for (size_t i = 0; i < _clients.size(); ++i)
