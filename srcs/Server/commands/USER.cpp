@@ -1,23 +1,36 @@
 #include "Server.hpp"
 
-
-void	Server::_NICK(Client* client, const std::vector<std::string> &args)
+void	Server::_USER(Client* client, std::vector<std::string>& args)
 {
-		//modifier args[1] quand le parsing sera fais 
-		if (args[1].length() > 9)
+	std::string	username;
+	std::string	message;
+
+	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
+	if (args.size() != 5)
+	{
+		this->sendMessage(client, "[ERROR] : Usage : /user <user> <mode> <unused> <realname>\n");
+		return ;
+	}
+	if (client->isRegister())
+	{
+		this->sendMessage(client, "You may not reregister.\n");
+		return ;
+	}
+	username = args[1];	
+	if (username.length() > 9)
+	{
+		this->sendMessage(client, "[ERROR] : Your username is too long (max 9 characters).\n");
+		return ;
+	}
+	for (size_t i = 0; i < _clients.size(); ++i)
+	{
+		if (_clients[i]->getName() == username)
 		{
-			this->sendMessage(client, "your nickname is too long/n");
-			return;
+			this->sendMessage(client, "[ERROR] : Your username is already used.\n");
+			return ;
 		}
-		for (size_t i = 0; i != _clients.size(); i++)
-		{
-			std::cout << args[1] << std::endl;
-			std::cout << _clients[i]->getNickname() << std::endl;
-			if (args[1] == _clients[i]->getNickname())
-			{
-				this->sendMessage(client, "your nickname is already to use/n");
-				return;
-			}
-		}
-		client->setNickname(args[1]);
+	}
+	client->setName(username);
+	client->setRegister(true);
+	this->sendMessage(client, "You are now connected as " + username + ".\n");
 }

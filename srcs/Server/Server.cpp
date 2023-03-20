@@ -74,15 +74,17 @@ void	Server::run(void)
 		if (FD_ISSET(_listening_socket, &_readfds))
 			_new_client_connection();
 			// new connection
-
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
 					if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
-				if (res == -1)
+				if (res == -1 || res == 0)
 				{
-					std::cerr << ERROR << "Recv failed" << std::endl;
+					if (res == -1)
+						std::cerr << ERROR << "Recv failed" << std::endl;
+					else
+						std::cerr << ERROR << "Recv nothing" << std::endl;
 					this->_disconnect_client(_clients[i]);
 					if (_clients[i]->getPass())
 						std::cout << "pass" << std::endl;
@@ -96,7 +98,6 @@ void	Server::run(void)
 					this->_disconnect_client(_clients[i]);
 					continue;
 				}
-				//res = send(_clients[i]->getSockfd(), "Yes mon bro\n", 12, 0);
 			}
 
 			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
@@ -176,8 +177,12 @@ void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 	for (int i = 0; i < 11; i++)
 	{
 		if (args[0].compare(this->_cmds[i]) == 0)
+		{
 			(this->*_commands_funcs[i])(client, args);
+			return ;
+		}
 	}
+	this->sendMessage(client, "Command not found.\n");
 }
 
 void	Server::_disconnect_client(Client* client)
@@ -191,7 +196,7 @@ void	Server::_disconnect_client(Client* client)
 	{
 		if (*it == client)
 		{
-			std::cout << LOG << "Client " << client->getName() << " has just been disconnect." << std::endl;
+			std::cout << LOG << "Client " << client->getName() << " has just been disconnected." << std::endl;
 			//this->sendMessage(client, "You have been disconnected by server.");
 			close(client->getSockfd());
 			_clients.erase(it);
@@ -281,49 +286,31 @@ int	Server::_listen(void) const
 		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }
-
-/*bool	Server::isOperator(std::string const &channel, Client const &Client)
-{
-	
-}*/
-
-void	Server::_USER(Client* client, const std::vector<std::string> & command)
+void	Server::_KICK(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
 }
 
-void	Server::_KICK(Client* client, const std::vector<std::string> & command)
+void	Server::_MODE(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
 }
 
-void	Server::_MODE(Client* client, const std::vector<std::string> & command)
+void	Server::_MSG(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
 }
 
-void	Server::_MSG(Client* client, const std::vector<std::string> & command)
+void	Server::_NAMES(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;
 }
 
-void	Server::_QUIT(Client* client, const std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_NAMES(Client* client, const std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_PART(Client* client, const std::vector<std::string> & command)
+void	Server::_PART(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
 	(void)command;

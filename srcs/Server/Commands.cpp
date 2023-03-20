@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void	Server::_JOIN(Client* client, const std::vector<std::string> & command)
+void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 {
 		for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		if (command[1] == (*it)->getName())
@@ -14,7 +14,7 @@ void	Server::_JOIN(Client* client, const std::vector<std::string> & command)
 		std::cout << (*it)->getName() << std::endl;
 }
 
-void	Server::_INVITE(Client* client, const std::vector<std::string> & command)
+void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 {
 	std::vector<Client *>::const_iterator itsOperator;
 	std::vector<Client *>::const_iterator iteOperator;
@@ -51,7 +51,7 @@ void	Server::_INVITE(Client* client, const std::vector<std::string> & command)
 	this->sendMessage(client, "you are not operator of this channel\n");
 }
 
-void	Server::_NICK(Client* client, const std::vector<std::string> &args)
+void	Server::_NICK(Client* client, std::vector<std::string> &args)
 {
 		std::cout << args[1] << std::endl;
 		/*std::cout << args[1].length() << std::endl;*/
@@ -71,7 +71,7 @@ void	Server::_NICK(Client* client, const std::vector<std::string> &args)
 		client->setNickname(args[1]);
 }
 
-void	Server::_PASS(Client* client, const std::vector<std::string> & args)
+void	Server::_PASS(Client* client, std::vector<std::string> & args)
 {
 	if(args[1] == _password)
 		client->setPass(true);
