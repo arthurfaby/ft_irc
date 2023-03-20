@@ -109,30 +109,44 @@ void	Server::run(void)
 void	Server::_parse_cmd_args(std::string args, Client *client)
 {
 	std::vector<std::string>	parsed_args;
+	size_t						nb_args;
 	size_t 						start = 0;
-	size_t						end = args.find(' ', start);
-	size_t						pos = args.find_first_not_of(" \t\n\r");
+	size_t						end;
+	size_t						pos = args.find_first_not_of(" ");
 	
+	args.resize(args.size() - 2);
 	if (pos != std::string::npos)
 		args.erase(0, pos);
-	pos = args.find_last_not_of(" \t\n\r");
+	pos = args.find_last_not_of(" ");
 	if (pos != std::string::npos)
 		args.erase(pos + 1);
 	for (size_t i = 0; i < args.size(); i++)
 		args[i] = tolower(args[i]);
+	end = args.find(' ', start);
 	while (end != std::string::npos)
 	{
-		end = args.find(' ', start);
-		parsed_args.push_back(args.substr(start, end - start));
+		if (args.substr(start, end - start).size() > 0)
+			parsed_args.push_back(args.substr(start, end - start));
 		start = end + 1;
+		end = args.find(' ', start);
 	}
-	parsed_args.push_back(args.substr(start));
-	//compter les args
+	if (args.substr(start, end - start).size() > 0)
+		parsed_args.push_back(args.substr(start));
+	for (size_t i = 0; i < parsed_args.size(); i++)
+		std::cout << "1: "<< parsed_args[i] << std::endl;
+	nb_args = parsed_args.size();
+	std::cout << "1:" << nb_args << std::endl;
+	(void)nb_args;
 	this->_call_cmd(parsed_args, client);
 }
 
 void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 {
+	if (args.size() == 0)
+	{
+		std::cout << "nothing in vector" << std::endl;
+		return ;
+	}
 	for (int i = 0; i < 11; i++)
 	{
 		if (args[0].compare(this->_cmds[i]) == 0)
