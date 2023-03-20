@@ -83,8 +83,9 @@ private:
 	void				_init_commands_funcs(void);
 
 	// Commands
-	void	_call_cmd(std::vector<std::string> & args, Client *client);
-	void	_parse_cmd_args(std::string args, Client *client);
+	std::vector<std::string>	_parse_cmds(std::string args);
+	void						_parse_cmd_args(std::string args, Client *client);
+	void						_call_cmd(std::vector<std::string> & args, Client *client);
 
 	/* NICK <nickname> */
 	void	_NICK(Client* client, std::vector<std::string> & command);
