@@ -109,7 +109,6 @@ void	Server::run(void)
 void	Server::_parse_cmd_args(std::string args, Client *client)
 {
 	std::vector<std::string>	parsed_args;
-	size_t						nb_args;
 	size_t 						start = 0;
 	size_t						end;
 	size_t						pos = args.find_first_not_of(" ");
@@ -132,11 +131,6 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	}
 	if (args.substr(start, end - start).size() > 0)
 		parsed_args.push_back(args.substr(start));
-	for (size_t i = 0; i < parsed_args.size(); i++)
-		std::cout << "1: "<< parsed_args[i] << std::endl;
-	nb_args = parsed_args.size();
-	std::cout << "1:" << nb_args << std::endl;
-	(void)nb_args;
 	this->_call_cmd(parsed_args, client);
 }
 
