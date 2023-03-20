@@ -1,13 +1,5 @@
 #include "Server.hpp"
 
-static bool	isInVector(const std::string& name, const std::vector<Channel*>& channels)
-{
-	for  (size_t i = 0; i < channels.size(); ++i)
-		if (name == channels[i]->getName())
-			return (true);
-	return (false);
-}
-
 void	Server::_PART(Client* client, std::vector<std::string>& args)
 {
 	if (args.size() < 3) return;
@@ -33,7 +25,7 @@ void	Server::_PART(Client* client, std::vector<std::string>& args)
 			this->sendMessage(client, "Channel '" + channels[i] + "' is invalid.\n");
 			continue;
 		}
-		if (!isInVector(channels[i], _channels))
+		if (!_doesChannelExists(channels[i]))
 		{
 			this->sendMessage(client, "Channel '" + channels[i] + "' does not exists.\n");
 			continue;
@@ -44,7 +36,7 @@ void	Server::_PART(Client* client, std::vector<std::string>& args)
 				if (channels[i] == _channels[j]->getName())
 					actual = _channels[j];
 			for (size_t j = 0; j < actual->getMembers().size(); ++j)
-				this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has leaved the channel (" + args[3] + ").\n");
+				this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has leaved the channel (" + args[2].substr(1) + ").\n");
 			actual->removeMember(client);
 		}
 	}

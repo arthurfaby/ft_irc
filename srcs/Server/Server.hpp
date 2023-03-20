@@ -86,6 +86,11 @@ private:
 	void				_init_cmds(void);
 	void				_init_commands_funcs(void);
 
+	bool		_doesChannelExists(const std::string& name) const;
+	bool		_doesClientExists(const std::string& name) const;
+	Channel*	_getChannel(const std::string& name);
+	Client*		_getClient(const std::string& name);
+
 	// Commands
 	std::vector<std::string>	_parse_cmds(std::string args);
 	void						_parse_cmd_args(std::string args, Client *client);
