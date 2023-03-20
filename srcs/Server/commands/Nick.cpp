@@ -3,7 +3,8 @@
 
 void	Server::_NICK(Client* client, const std::vector<std::string> &args)
 {
-		//modifier args[1] quand le parsing sera fais 
+		std::cout << args[1] << std::endl;
+		/*std::cout << args[1].length() << std::endl;*/
 		if (args[1].length() > 9)
 		{
 			this->sendMessage(client, "your nickname is too long/n");
@@ -11,8 +12,6 @@ void	Server::_NICK(Client* client, const std::vector<std::string> &args)
 		}
 		for (size_t i = 0; i != _clients.size(); i++)
 		{
-			std::cout << args[1] << std::endl;
-			std::cout << _clients[i]->getNickname() << std::endl;
 			if (args[1] == _clients[i]->getNickname())
 			{
 				this->sendMessage(client, "your nickname is already to use/n");

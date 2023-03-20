@@ -8,9 +8,11 @@
 #include <cstdlib>
 #include <unistd.h>
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "common.hpp"
 
 class Client;
+class Channel;
 
 class Server
 {
@@ -48,6 +50,7 @@ public:
 	void				create_new_client_socket(void) const;
 	void				read_on_socket(int );
 	void				write_to_socket(int socket);
+//	bool				isOperator(std::string const &channel, Client const &Client); 
 
 	void				run(void);
 
@@ -64,8 +67,10 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::vector<Client *>		_clients; // temp attributs of sockets waiting for Client class
-	/* std::vector<Client*>	_clients; */
+	std::string				_cmds[11];
+	void					(Server::*_commands_funcs[11])(Client *client, const std::vector<std::string> & args);
+	std::vector<Client *>	_clients; // temp attributs of sockets waiting for Client class
+	std::vector<Channel *>	_channels;
 	struct sockaddr_in		_address;
 	fd_set					_readfds;
 	fd_set					_writefds;
@@ -78,43 +83,46 @@ private:
 	int					_init_listening_socket(void) const;
 	int					_bind(void) const;
 	int					_listen(void) const;
-
+	void				_init_cmds(void);
+	void				_init_commands_funcs(void);
 
 	// Commands
+	void	_call_cmd(std::vector<std::string> & args, Client *client);
+	void	_parse_cmd_args(std::string args, Client *client);
 
 	/* NICK <nickname> */
 	void	_NICK(Client* client, const std::vector<std::string> &args);
 
 	/* USER <user> <mode> <unused> <realname> set only username to user. */
-	void	_USER(Client* client, const  std::vector<std::string> &args);
-
+	void	_USER(Client* client, const std::vector<std::string> & args);
+	
 	/* PASS <password> */
 	// Check if password is correct, then set client to connected status
-	void	_PASS(Client* client, const std::string& args);
+	void	_PASS(Client* client, const std::vector<std::string> & args);
 
 	/* INVITE <nickname> [<channel>] */
-	void	_INVITE(Client* client, const std::string& args);
+	void	_INVITE(Client* client, const std::vector<std::string> & args);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
-	void	_KICK(Client* client, const std::string& args);
+	void	_KICK(Client* client, const std::vector<std::string> & args);
 
 	/* MODE <nickname> {+,-}{o} */
-	void	_MODE(Client* client, const std::string& args);	
+	void	_MODE(Client* client, const std::vector<std::string> & args);	
 
 	/* MSG  {<nickname> <message> */
-	void	_MSG(Client* client, const std::string& args);	
+	void	_MSG(Client* client, const std::vector<std::string> & args);	
 
 	/* QUIT <quit message> */
-	void	_QUIT(Client* client, const std::string& args);	
+	void	_QUIT(Client* client, const std::vector<std::string> & args);	
 
 	/* NAMES [<channel>,...] */
-	void	_NAMES(Client* client, const std::string& args);	
+	void	_NAMES(Client* client, const std::vector<std::string> & args);	
 
 	/* JOIN <channel>[,...]  */
-	void	_JOIN(Client* client, const std::string& args);	
+	void	_JOIN(Client* client, const std::vector<std::string> & args);	
 
 	/* PART <channel>[,...] */
-	void	_PART(Client* client, const std::string& args);	
+	void	_PART(Client* client, const std::vector<std::string> & args);	
 };
 
 #endif
