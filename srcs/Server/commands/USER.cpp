@@ -3,6 +3,7 @@
 void	Server::_USER(Client* client, std::vector<std::string>& args)
 {
 	std::string	username;
+	std::string	message;
 
 	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
 	if (args.size() != 5)
@@ -31,7 +32,5 @@ void	Server::_USER(Client* client, std::vector<std::string>& args)
 	}
 	client->setName(username);
 	client->setRegister(true);
-	this->sendMessage(client, "You are now connected as ");
-	this->sendMessage(client, username);
-	this->sendMessage(client, ".\n");
+	this->sendMessage(client, "You are now connected as " + username + ".\n");
 }

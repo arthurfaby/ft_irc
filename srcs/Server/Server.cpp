@@ -175,8 +175,12 @@ void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 	for (int i = 0; i < 11; i++)
 	{
 		if (args[0].compare(this->_cmds[i]) == 0)
+		{
 			(this->*_commands_funcs[i])(client, args);
+			return ;
+		}
 	}
+	this->sendMessage(client, "Command not found.\n");
 }
 
 void	Server::_disconnect_client(Client* client)
@@ -190,7 +194,7 @@ void	Server::_disconnect_client(Client* client)
 	{
 		if (*it == client)
 		{
-			std::cout << LOG << "Client " << client->getName() << " has just been disconnect." << std::endl;
+			std::cout << LOG << "Client " << client->getName() << " has just been disconnected." << std::endl;
 			//this->sendMessage(client, "You have been disconnected by server.");
 			close(client->getSockfd());
 			_clients.erase(it);
