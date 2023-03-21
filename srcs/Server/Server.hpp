@@ -87,7 +87,7 @@ private:
 	void				_init_commands_funcs(void);
 
 	// Commands
-	std::vector<std::string>	_parse_cmds(std::string args);
+	std::vector<std::string>	_parse_cmds(std::string & args);
 	void						_parse_cmd_args(std::string args, Client *client);
 	void						_call_cmd(std::vector<std::string> & args, Client *client);
 
@@ -110,8 +110,9 @@ private:
 	/* MODE <nickname> {+,-}{o} */
 	void	_MODE(Client* client, std::vector<std::string> & args);	
 
-	/* MSG  {<nickname> <message> */
-	void	_MSG(Client* client, std::vector<std::string> & args);	
+	/* MSG <nickname> <message> */
+	void	_SENDMSG(Client* client, std::vector<std::string> & args);	
+	bool	_check_channel_or_user_exists(const std::string dest, Client *client);
 
 	/* QUIT <quit message> */
 	void	_QUIT(Client* client, std::vector<std::string> & args);	

@@ -109,7 +109,7 @@ void	Server::run(void)
 	}
 }
 
-std::vector<std::string>	Server::_parse_cmds(std::string args)
+std::vector<std::string>	Server::_parse_cmds(std::string & args)
 {
 	std::vector<std::string>	parsed_cmds;
 	size_t						start = 0;
@@ -155,12 +155,19 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	end = parsed_cmds[0].find(' ', start);
 	while (end != std::string::npos)
 	{
+		std::string	temp = parsed_cmds[0].substr(start, end - start);
+		if (temp[0] == ':')
+		{
+			parsed_args.push_back(parsed_cmds[0].substr(start + 1, std::string::npos));
+			end = std::string::npos;
+			break ;
+		}
 		if (parsed_cmds[0].substr(start, end - start).size() > 0)
 			parsed_args.push_back(parsed_cmds[0].substr(start, end - start));
 		start = end + 1;
 		end = parsed_cmds[0].find(' ', start);
 	}
-	if (parsed_cmds[0].substr(start, end - start).size() > 0)
+	if (parsed_cmds[0].substr(start, end - start).size() > 0 && std::string::npos)
 		parsed_args.push_back(parsed_cmds[0].substr(start));
 	this->_call_cmd(parsed_args, client);
 	if (trigger == 1)
@@ -298,12 +305,6 @@ void	Server::_MODE(Client* client, std::vector<std::string> & command)
 	(void)command;
 }
 
-void	Server::_MSG(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
 void	Server::_NAMES(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
@@ -324,7 +325,7 @@ void	Server::_init_commands_funcs(void)
 	this->_commands_funcs[3] = (&Server::_INVITE);
 	this->_commands_funcs[4] = (&Server::_KICK);
 	this->_commands_funcs[5] = (&Server::_MODE);
-	this->_commands_funcs[6] = (&Server::_MSG);
+	this->_commands_funcs[6] = (&Server::_SENDMSG);
 	this->_commands_funcs[7] = (&Server::_QUIT);
 	this->_commands_funcs[8] = (&Server::_NAMES);
 	this->_commands_funcs[9] = (&Server::_JOIN);
@@ -339,7 +340,7 @@ void	Server::_init_cmds(void)
 	this->_cmds[3] = "invite";
 	this->_cmds[4] = "kick";
 	this->_cmds[5] = "mode";
-	this->_cmds[6] = "msg";
+	this->_cmds[6] = "sendmsg";
 	this->_cmds[7] = "quit";
 	this->_cmds[8] = "names";
 	this->_cmds[9] = "join";
