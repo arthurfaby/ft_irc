@@ -110,7 +110,7 @@ private:
 	void	_INVITE(Client* client, std::vector<std::string> & args);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
-	void	_KICK(Client* client, std::vector<std::string> & args);
+	void	_KICKUSR(Client* client, std::vector<std::string> & args);
 
 	/* MODE <nickname> {+,-}{o} */
 	void	_MODE(Client* client, std::vector<std::string> & args);	

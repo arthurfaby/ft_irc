@@ -6,7 +6,7 @@ void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 	std::vector<std::string>	channels;
 	size_t						pos;
 
-	if(command.size() != 2)
+	if(command.size() < 2)
 			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
 	pos = copy[1].find(',');
 	while (pos != std::string::npos)
@@ -17,21 +17,22 @@ void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 	}
 	channels.push_back(copy[1]);
 
-	
 	for (size_t i = 0; i < channels.size(); ++i)
 	{
-		for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
+		if (_doesChannelExists(channels[i]) == true)
 		{
-			if (channels[i] == (*it)->getName())
+			Channel	*channel = _getChannel(channels[i]);
+			if (channel->isIn(client->getName()) == false)
 			{
-				(*it)->addMember(client);
+				channel->addMember(client);
 				//msg a tous les membre du channel;
-				return;
 			}
-			if(channels[i][0] != '#')
-				this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+			else
+				this->sendMessage(client, "you are already in this channel\n");
+			return;
 		}
-			
+		if(channels[i][0] != '#')
+			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
 		_channels.push_back(new Channel(command[1], client));
 	}
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
@@ -40,49 +41,36 @@ void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 
 void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 {
-	std::vector<Client *>::const_iterator itsOperator;
-	std::vector<Client *>::const_iterator iteOperator;
-	std::vector<Client *>::iterator itsClient = _clients.begin();
-	std::vector<Channel *>::iterator it = _channels.begin();
 	std::string	invit;
+	Client	*dest;
+	Channel	*channel;
 
-	std::cout << command.size() << std::endl;
 	if (command.size() != 3)
 	{
 		this->sendMessage(client, "usage: INVITE <nick> <channel>");
 	}
-	for (; itsClient != _clients.end(); itsClient++) 
-		if (command[1] == (*itsClient)->getNickname())
-			break;
-	if (itsClient == _clients.end())
+	dest = _getClient(command[1]);
+	if (!client)
 	{
 		this->sendMessage(client, "Client not found\n");
 		return;
 	}
-
-	for (; it != _channels.end(); it++)
-		if (command[2] == (*it)->getNickname())
-		{
-			itsOperator = (*it)->getOperators().begin();
-			iteOperator = (*it)->getOperators().end();
-			break;
-		}
-	if (it == _channels.end())
+	channel = _getChannel(command[1]);
+	if (!channel)
 	{
 		this->sendMessage(client, "Channel not found\n");
 		return;
 	}
-		for (; itsOperator != iteOperator; itsOperator++)
-		if (client->getNickname() == (*itsOperator)->getNickname())
-		{
-			invit = client->getNickname();
-			invit += " invites you in the channel ";
-			invit += command[1];	
-			invit += " /join ";
-			invit += command[1];	
-			this->sendMessage((*itsClient), invit);
-			return ;
-		}
+	if (channel->isOp(client->getName()) == true)
+	{
+		invit = client->getNickname();
+		invit += " invites you in the channel ";
+		invit += command[1];	
+		invit += " /join ";
+		invit += command[1];	
+		this->sendMessage(dest, invit);
+		return ;
+	}
 	this->sendMessage(client, "you are not operator of this channel\n");
 }
 
@@ -114,12 +102,43 @@ void	Server::_PASS(Client* client, std::vector<std::string> & args)
 
 void	Server::_MODE(Client* client, std::vector<std::string> & command)
 {
-	if (command.size() != 5)
-		this->sendMessage("usage: mode -o <nick> <channel>");
+	Channel *channel;
+
+	if (command.size() != 4)
+	{
+		this->sendMessage(client, "usage: mode -o <nick> <channel>\n");
+		return;
+	}
 	if(command[1] != "-o")
-		this->sendMessage("usage: mode -o <nick> <channel>");
-	 
-
+	{
+		this->sendMessage(client, "usage: mode -o <nick> <channel>\n");
+		return;
+	}
+	if (_doesClientExists(command[2]) == false)
+	{
+		this->sendMessage(client, "client doesn't exist\n");
+		return;
+	}
+	if (_doesChannelExists(command[3]) == false)
+	{
+		this->sendMessage(client, "channel	doesn't exist\n");
+		return;
+	}
+	channel = _getChannel(command[3]);
+	if (channel->isOp(client->getName()) == false)
+	{
+		this->sendMessage(client, "you are not operator\n");
+		return;	
+	} 
+	if (channel->isIn(command[2]) == false)
+	{
+		this->sendMessage(client, "client is not in channel\n");
+		return;
+	}
+	if (channel->isOp(command[2]) == true)
+	{
+		this->sendMessage(client, "client is already operator\n");
+		return;
+	}
+	channel->addOperator(_getClient(command[2]));
 }
-
-

@@ -286,12 +286,6 @@ int	Server::_listen(void) const
 		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }
-void	Server::_KICK(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
 void	Server::_MSG(Client* client, std::vector<std::string> & command)
 {
 	(void)client;
@@ -304,19 +298,13 @@ void	Server::_NAMES(Client* client, std::vector<std::string> & command)
 	(void)command;
 }
 
-void	Server::_PART(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
 void	Server::_init_commands_funcs(void)
 {
 	this->_commands_funcs[0] = (&Server::_NICK);
 	this->_commands_funcs[1] = (&Server::_USER);
 	this->_commands_funcs[2] = (&Server::_PASS);
 	this->_commands_funcs[3] = (&Server::_INVITE);
-	this->_commands_funcs[4] = (&Server::_KICK);
+	this->_commands_funcs[4] = (&Server::_KICKUSR);
 	this->_commands_funcs[5] = (&Server::_MODE);
 	this->_commands_funcs[6] = (&Server::_MSG);
 	this->_commands_funcs[7] = (&Server::_QUIT);
@@ -331,7 +319,7 @@ void	Server::_init_cmds(void)
 	this->_cmds[1] = "user";
 	this->_cmds[2] = "pass";
 	this->_cmds[3] = "invite";
-	this->_cmds[4] = "kick";
+	this->_cmds[4] = "kickusr";
 	this->_cmds[5] = "mode";
 	this->_cmds[6] = "msg";
 	this->_cmds[7] = "quit";
