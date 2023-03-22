@@ -1,4 +1,3 @@
-
 NAME = ircserv
 
 SRCS =	srcs/main.cpp					\
@@ -8,7 +7,9 @@ SRCS =	srcs/main.cpp					\
 		srcs/Server/commands/USER.cpp	\
 		srcs/Server/commands/QUIT.cpp   \
 		srcs/Server/commands/SENDMSG.cpp   \
+		srcs/Server/commands/NAMES.cpp   \
 		srcs/Server/Commands.cpp	\
+		srcs/Server/commands/PART.cpp   \
 
 OBJS = ${SRCS:.cpp=.o}
 

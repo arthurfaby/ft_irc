@@ -92,7 +92,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				//std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
@@ -130,35 +130,40 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 {
 	std::vector<std::string>	parsed_args;
 	std::vector<std::string>	parsed_cmds;
+	std::string					temp;
 	size_t 						start = 0;
 	size_t						end;
-	size_t						pos = args.find_first_not_of(" ");
+	size_t						pos;
 	int							trigger = 0;
 	size_t						index;
 	
+	if (args[0] == ' ')
+	{
+		this->sendMessage(client, "Space before command is not valid\n");
+		return ;
+	}
 	parsed_cmds.push_back(args);
-	index = parsed_cmds[0].find("\r\n");
+	index = parsed_cmds[0].find("\r\n");//checks for multiple commands in one message
 	if (index != std::string::npos && index != parsed_cmds[0].size() - 2)
 	{
 		parsed_cmds = _parse_cmds(parsed_cmds[0]);
 		trigger = 1;
 	}
 	else
-		parsed_cmds[0].resize(parsed_cmds[0].size() - 2);
-	if (pos != std::string::npos)
-		parsed_cmds[0].erase(0, pos);
+		parsed_cmds[0].resize(parsed_cmds[0].size() - 2);//only one command
 	pos = parsed_cmds[0].find_last_not_of(" ");
 	if (pos != std::string::npos)
-		parsed_cmds[0].erase(pos + 1);
+		parsed_cmds[0].erase(pos + 1);//remove trailing spaces
+	(void)pos;
 	for (size_t i = 0; i < parsed_cmds[0].size(); i++)
-		parsed_cmds[0][i] = tolower(parsed_cmds[0][i]);
+		parsed_cmds[0][i] = tolower(parsed_cmds[0][i]);//lowercase the entire string
 	end = parsed_cmds[0].find(' ', start);
 	while (end != std::string::npos)
 	{
-		std::string	temp = parsed_cmds[0].substr(start, end - start);
+		temp = parsed_cmds[0].substr(start, end - start);
 		if (temp[0] == ':')
 		{
-			parsed_args.push_back(parsed_cmds[0].substr(start + 1, std::string::npos));
+			parsed_args.push_back(parsed_cmds[0].substr(start + 1));//puts everything after the ':' in the vector
 			end = std::string::npos;
 			break ;
 		}
@@ -167,7 +172,10 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		start = end + 1;
 		end = parsed_cmds[0].find(' ', start);
 	}
-	if (parsed_cmds[0].substr(start, end - start).size() > 0 && std::string::npos)
+	temp = parsed_cmds[0].substr(start, end - start);
+	if (temp[0] == ':') //in case there is only one word in message
+		parsed_args.push_back(parsed_cmds[0].substr(start + 1));
+	else if (parsed_cmds[0].substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
 		parsed_args.push_back(parsed_cmds[0].substr(start));
 	this->_call_cmd(parsed_args, client);
 	if (trigger == 1)
@@ -293,56 +301,65 @@ int	Server::_listen(void) const
 		std::cerr << ERROR << "Listen failed." << std::endl;
 	return (listen_value);
 }
-void	Server::_KICK(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_MODE(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_NAMES(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
-
-void	Server::_PART(Client* client, std::vector<std::string> & command)
-{
-	(void)client;
-	(void)command;
-}
 
 void	Server::_init_commands_funcs(void)
 {
-	this->_commands_funcs[0] = (&Server::_NICK);
-	this->_commands_funcs[1] = (&Server::_USER);
-	this->_commands_funcs[2] = (&Server::_PASS);
-	this->_commands_funcs[3] = (&Server::_INVITE);
-	this->_commands_funcs[4] = (&Server::_KICK);
-	this->_commands_funcs[5] = (&Server::_MODE);
-	this->_commands_funcs[6] = (&Server::_SENDMSG);
-	this->_commands_funcs[7] = (&Server::_QUIT);
-	this->_commands_funcs[8] = (&Server::_NAMES);
-	this->_commands_funcs[9] = (&Server::_JOIN);
-	this->_commands_funcs[10] = (&Server::_PART);
+	this->_commands_funcs[0] = (&Server::_CMDNICK);
+	this->_commands_funcs[1] = (&Server::_CMDUSER);
+	this->_commands_funcs[2] = (&Server::_CMDPASS);
+	this->_commands_funcs[3] = (&Server::_CMDINVITE);
+	this->_commands_funcs[4] = (&Server::_CMDKICK);
+	this->_commands_funcs[5] = (&Server::_CMDMODE);
+	this->_commands_funcs[6] = (&Server::_CMDMSG);
+	this->_commands_funcs[7] = (&Server::_CMDQUIT);
+	this->_commands_funcs[8] = (&Server::_CMDNAMES);
+	this->_commands_funcs[9] = (&Server::_CMDJOIN);
+	this->_commands_funcs[10] = (&Server::_CMDPART);
 }
 
 void	Server::_init_cmds(void)
 {
-	this->_cmds[0] = "nick";
-	this->_cmds[1] = "user";
-	this->_cmds[2] = "pass";
-	this->_cmds[3] = "invite";
-	this->_cmds[4] = "kick";
-	this->_cmds[5] = "mode";
-	this->_cmds[6] = "sendmsg";
-	this->_cmds[7] = "quit";
-	this->_cmds[8] = "names";
-	this->_cmds[9] = "join";
-	this->_cmds[10] = "part";
+	this->_cmds[0] = "cmdnick";
+	this->_cmds[1] = "cmduser";
+	this->_cmds[2] = "cmdpass";
+	this->_cmds[3] = "cmdinvite";
+	this->_cmds[4] = "cmdkick";
+	this->_cmds[5] = "cmdmode";
+	this->_cmds[6] = "cmdmsg";
+	this->_cmds[7] = "cmdquit";
+	this->_cmds[8] = "cmdnames";
+	this->_cmds[9] = "cmdjoin";
+	this->_cmds[10] = "cmdpart";
+}
+
+bool	Server::_doesChannelExists(const std::string& name) const
+{
+	for  (size_t i = 0; i < _channels.size(); ++i)
+		if (name == _channels[i]->getName())
+			return (true);
+	return (false);
+}
+
+bool	Server::_doesClientExists(const std::string& name) const
+{
+	for (size_t i = 0; i < _clients.size(); ++i)
+		if (_clients[i]->getName() == name)
+			return (true);
+	return (false);
+}
+
+Channel*	Server::_getChannel(const std::string& name)
+{
+	for  (size_t i = 0; i < _channels.size(); ++i)
+		if (name == _channels[i]->getName())
+			return (_channels[i]);
+	return (NULL);
+}
+
+Client*	Server::_getClient(const std::string& name)
+{
+	for  (size_t i = 0; i < _clients.size(); ++i)
+		if (name == _clients[i]->getName())
+			return (_clients[i]);
+	return (NULL);
 }

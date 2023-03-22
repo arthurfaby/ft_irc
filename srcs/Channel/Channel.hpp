@@ -23,6 +23,9 @@ class Channel
 		void						removeMember(const Client *client);
 		void						_send_msg_to_all_members(const std::string & msg) const;
 
+		bool						isIn(const std::string& name) const;
+		bool						isOp(const std::string& name) const;
+
 	private:
 
 		const std::string		_name;
