@@ -5,14 +5,14 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 {
 	if (args.size() < 3)
 	{
-		this->sendMessage(client, "usage: KICK <channel>[,...] <user> [:<comment>]\n");
+		this->sendMessage(client, "Usage: /CMDKICK <channel>[,...] <user> [:<comment>]\n");
 		return;
 	}
 	if (args.size() > 3)
 	{
 		if (args[3][0] != ':')
 		{
-			this->sendMessage(client, "usage: KICK <channel>[,...] <user> [:<comment>]\n");
+			this->sendMessage(client, "Usage: /CMDKICK <channel>[,...] <user> [:<comment>]\n");
 			return ;
 		}
 	}
@@ -54,22 +54,28 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 			actual = _getChannel(channels[i]);
 			if (actual->isOp(client->getName()) == false)
 			{
-				this->sendMessage(client, "you are not operator of this channel\n");
+				this->sendMessage(client, "You are not operator of this channel (" + actual->getName() + ").\n");
 				continue;
 			}
 			if (actual->isIn(args[2]))
 			{
 				actual->removeMember(_getClient(args[2]));
 				this->sendMessage(client, "You kicked " + args[2] + ".\n");
-				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getName() ".\n");
+				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getName() + ".\n");
 				if (args.size() < 4)
 					this->sendMessage(this->_getClient(args[2]), "Reason : unspecified.\n");
 				else
-					this->sendMessage(this->_getClient(args[2]), "Reason : " + args[3] + ".\n");
+					this->sendMessage(this->_getClient(args[2]), "Reason : " + args[3].substr(1) + ".\n");
+				for (size_t j = 0; j < actual->getMembers().size(); ++j)
+					if (actual->getMembers()[j] != client)
+						this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has been kicked by " + client->getName() + ".\n");
+
 			}
-			for (size_t j = 0; j < actual->getMembers().size(); ++j)
-				if (actual->getMembers()[j] != client)
-					this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has been kicked by " + client->getName() + ".\n");
+			else
+			{
+				this->sendMessage(client, "User " + args[2] + " is not in channel (" + actual->getName() + ").\n");
+				continue;
+			}
 		}
 	}
 }

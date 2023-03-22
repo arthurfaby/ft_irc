@@ -163,7 +163,7 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		temp = parsed_cmds[0].substr(start, end - start);
 		if (temp[0] == ':')
 		{
-			parsed_args.push_back(parsed_cmds[0].substr(start + 1));//puts everything after the ':' in the vector
+			parsed_args.push_back(parsed_cmds[0].substr(start));//puts everything after the ':' in the vector
 			end = std::string::npos;
 			break ;
 		}
@@ -174,7 +174,7 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	}
 	temp = parsed_cmds[0].substr(start, end - start);
 	if (temp[0] == ':') //in case there is only one word in message
-		parsed_args.push_back(parsed_cmds[0].substr(start + 1));
+		parsed_args.push_back(parsed_cmds[0].substr(start));
 	else if (parsed_cmds[0].substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
 		parsed_args.push_back(parsed_cmds[0].substr(start));
 	this->_call_cmd(parsed_args, client);
