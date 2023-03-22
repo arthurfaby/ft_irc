@@ -4,12 +4,13 @@ SRCS =	srcs/main.cpp					\
 		srcs/Server/Server.cpp			\
 		srcs/Client/Client.cpp			\
 		srcs/Channel/Channel.cpp		\
-		srcs/Server/commands/USER.cpp	\
-		srcs/Server/commands/QUIT.cpp   \
-		srcs/Server/commands/SENDMSG.cpp   \
-		srcs/Server/commands/NAMES.cpp   \
-		srcs/Server/Commands.cpp	\
-		srcs/Server/commands/PART.cpp   \
+		srcs/Server/commands/CMDUSER.cpp	\
+		srcs/Server/commands/CMDNAMES.cpp	\
+		srcs/Server/commands/CMDMSG.cpp	\
+		srcs/Server/commands/CMDQUIT.cpp   \
+		srcs/Server/commands/CMDPART.cpp   \
+		srcs/Server/commands/CMDKICK.cpp   \
+		srcs/Server/Commands.cpp		\
 
 OBJS = ${SRCS:.cpp=.o}
 

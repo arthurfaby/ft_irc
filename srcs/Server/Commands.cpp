@@ -1,67 +1,87 @@
 #include "Server.hpp"
 
-void	Server::_JOIN(Client* client, std::vector<std::string> & command)
+void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 {
-		for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
-		if (command[1] == (*it)->getName())
+	std::vector<std::string>	copy(command);
+	std::vector<std::string>	channels;
+	size_t						pos;
+
+	if(command.size() < 2)
+			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+	pos = copy[1].find(',');
+	while (pos != std::string::npos)
+	{
+		channels.push_back(copy[1].substr(0, pos));
+		copy[1].erase(0, pos + 1);
+		pos = copy[1].find(',');
+	}
+	channels.push_back(copy[1]);
+
+	for (size_t i = 0; i < channels.size(); ++i)
+	{
+		if (_doesChannelExists(channels[i]) == true)
 		{
-			(*it)->addMember(client);
-			//msg a tous les membre du channel;
+			Channel	*channel = _getChannel(channels[i]);
+			if (channel->isIn(client->getName()) == false)
+			{
+				channel->addMember(client);
+				//msg a tous les membre du channel;
+			}
+			else
+				this->sendMessage(client, "you are already in this channel\n");
 			return;
 		}
-	_channels.push_back(new Channel(command[1], client));
+		if(channels[i][0] != '#')
+			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+		_channels.push_back(new Channel(command[1], client));
+	}
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		std::cout << (*it)->getName() << std::endl;
 }
 
-void	Server::_INVITE(Client* client, std::vector<std::string> & command)
+void	Server::_CMDINVITE(Client* client, std::vector<std::string> & command)
 {
-	std::vector<Client *>::const_iterator itsOperator;
-	std::vector<Client *>::const_iterator iteOperator;
-	std::vector<Client *>::iterator itsClient = _clients.begin();
-	std::vector<Channel *>::iterator it = _channels.begin();
 	std::string	invit;
+	Client	*dest;
+	Channel	*channel;
 
-
-	for (; it != _channels.end(); it++)
-		if (command[1] == (*it)->getName())
-		{
-			itsOperator = (*it)->getOperators().begin();
-			iteOperator = (*it)->getOperators().end();
-			break;
-		}
-	if (it == _channels.end())
-		this->sendMessage(client, "Channel not found\n");
-	for (; itsClient != _clients.end(); itsClient++) 
-		if (command[2] == (*itsClient)->getName())
-			break;
-	if (itsClient == _clients.end())
+	if (command.size() != 3)
+	{
+		this->sendMessage(client, "usage: INVITE <nick> <channel>");
+	}
+	dest = _getClient(command[1]);
+	if (!client)
+	{
 		this->sendMessage(client, "Client not found\n");
-	for (; itsOperator != iteOperator; itsOperator++)
-		if (client->getName() == (*itsOperator)->getName())
-		{
-			invit = client->getName();
-			invit += " invites you in the channel ";
-			invit += command[1];	
-			invit += " /join ";
-			invit += command[1];	
-			this->sendMessage((*itsClient), invit);
-			return ;
-		}
+		return;
+	}
+	channel = _getChannel(command[1]);
+	if (!channel)
+	{
+		this->sendMessage(client, "Channel not found\n");
+		return;
+	}
+	if (channel->isOp(client->getName()) == true)
+	{
+		invit = client->getNickname();
+		invit += " invites you in the channel ";
+		invit += command[1];	
+		invit += " /join ";
+		invit += command[1];	
+		this->sendMessage(dest, invit);
+		return ;
+	}
 	this->sendMessage(client, "you are not operator of this channel\n");
 }
 
-void	Server::_NICK(Client* client, std::vector<std::string> &args)
+void	Server::_CMDNICK(Client* client, std::vector<std::string> &args)
 {
+		std::cout << args[1] << std::endl;
+		/*std::cout << args[1].length() << std::endl;*/
 		if (args[1].length() > 9)
 		{
 			this->sendMessage(client, "your nickname is too long\n");
 			return;
-		}
-		if (args[1][0] == '#')
-		{
-			this->sendMessage(client, "[ERROR] : Your nickname can't begin with '#'.\n");
-			return ;
 		}
 		for (size_t i = 0; i != _clients.size(); i++)
 		{
@@ -74,8 +94,51 @@ void	Server::_NICK(Client* client, std::vector<std::string> &args)
 		client->setNickname(args[1]);
 }
 
-void	Server::_PASS(Client* client, std::vector<std::string> & args)
+void	Server::_CMDPASS(Client* client, std::vector<std::string> & args)
 {
 	if(args[1] == _password)
 		client->setPass(true);
+}
+
+void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
+{
+	Channel *channel;
+
+	if (command.size() != 4)
+	{
+		this->sendMessage(client, "usage: mode -o <nick> <channel>\n");
+		return;
+	}
+	if(command[1] != "-o")
+	{
+		this->sendMessage(client, "usage: mode -o <nick> <channel>\n");
+		return;
+	}
+	if (_doesClientExists(command[2]) == false)
+	{
+		this->sendMessage(client, "client doesn't exist\n");
+		return;
+	}
+	if (_doesChannelExists(command[3]) == false)
+	{
+		this->sendMessage(client, "channel	doesn't exist\n");
+		return;
+	}
+	channel = _getChannel(command[3]);
+	if (channel->isOp(client->getName()) == false)
+	{
+		this->sendMessage(client, "you are not operator\n");
+		return;	
+	} 
+	if (channel->isIn(command[2]) == false)
+	{
+		this->sendMessage(client, "client is not in channel\n");
+		return;
+	}
+	if (channel->isOp(command[2]) == true)
+	{
+		this->sendMessage(client, "client is already operator\n");
+		return;
+	}
+	channel->addOperator(_getClient(command[2]));
 }

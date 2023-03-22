@@ -92,7 +92,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				//std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);

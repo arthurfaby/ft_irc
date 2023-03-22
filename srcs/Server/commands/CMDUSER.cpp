@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void	Server::_USER(Client* client, std::vector<std::string>& args)
+void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 {
 	std::string	username;
 	std::string	message;

@@ -1,29 +1,13 @@
 #include "Server.hpp"
 
-static bool	isInVector(const std::string& name, const std::vector<Channel*>& channels)
-{
-	for  (size_t i = 0; i < channels.size(); ++i)
-		if (name == channels[i]->getName())
-			return (true);
-	return (false);
-}
 
-static bool	clientIsInChannel(const std::string& name, Channel* channel)
+void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 {
-	for (size_t i = 0; i < channel->getMembers().size(); ++i)
-		if (channel->getMembers()[i]->getName() == name)
-			return (true);
-	return (false);
-}
-
-static Client*	getClientInChannel(Channel* channel)
-{
-
-}
-
-void	Server::_KICK(Client* client, std::vector<std::string>& args)
-{
-	if (args.size() != 4) return;
+	if (args.size() < 3)
+	{
+		this->sendMessage(client, "usage: KICK <channel>[,...] <user> [<comment>]\n");
+		return;
+	}
 
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
@@ -58,9 +42,12 @@ void	Server::_KICK(Client* client, std::vector<std::string>& args)
 		}
 		else
 		{
-			for (size_t j = 0; j < _channels.size(); ++j)
-				if (channels[i] == _channels[j]->getName())
-					actual = _channels[j];
+			actual = _getChannel(channels[i]);
+			if (actual->isOp(client->getName()) == false)
+			{
+				this->sendMessage(client, "you are not operator of this channel\n");
+				return;
+			}
 			if (actual->isIn(args[2]))
 			{
 				actual->removeMember(_getClient(args[2]));
