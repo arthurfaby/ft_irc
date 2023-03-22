@@ -92,43 +92,44 @@ private:
 	Client*		_getClient(const std::string& name);
 
 	// Commands
-	std::vector<std::string>	_parse_cmds(std::string args);
+	std::vector<std::string>	_parse_cmds(std::string & args);
 	void						_parse_cmd_args(std::string args, Client *client);
 	void						_call_cmd(std::vector<std::string> & args, Client *client);
 
 	/* NICK <nickname> */
-	void	_NICK(Client* client, std::vector<std::string> &args);
+	void	_CMDNICK(Client* client, std::vector<std::string> &args);
 
 	/* USER <user> <mode> <unused> <realname> set only username to user. */
-	void	_USER(Client* client, std::vector<std::string> & args);
+	void	_CMDUSER(Client* client, std::vector<std::string> & args);
 	
 	/* PASS <password> */
 	// Check if password is correct, then set client to connected status
-	void	_PASS(Client* client, std::vector<std::string> & args);
+	void	_CMDPASS(Client* client, std::vector<std::string> & args);
 
 	/* INVITE <nickname> [<channel>] */
-	void	_INVITE(Client* client, std::vector<std::string> & args);
+	void	_CMDINVITE(Client* client, std::vector<std::string> & args);
 
 	/* KICK <channel>[,...] <user> [<comment>]*/
-	void	_KICKUSR(Client* client, std::vector<std::string> & args);
+	void	_CMDKICK(Client* client, std::vector<std::string> & args);
 
 	/* MODE <nickname> {+,-}{o} */
-	void	_MODE(Client* client, std::vector<std::string> & args);	
+	void	_CMDMODE(Client* client, std::vector<std::string> & args);	
 
-	/* MSG  {<nickname> <message> */
-	void	_MSG(Client* client, std::vector<std::string> & args);	
+	/* MSG <nickname> <message> */
+	void	_CMDMSG(Client* client, std::vector<std::string> & args);	
+	bool	_check_channel_or_user_exists(const std::string dest, Client *client);
 
 	/* QUIT <quit message> */
-	void	_QUIT(Client* client, std::vector<std::string> & args);	
+	void	_CMDQUIT(Client* client, std::vector<std::string> & args);	
 
 	/* NAMES [<channel>,...] */
-	void	_NAMES(Client* client, std::vector<std::string> & args);	
+	void	_CMDNAMES(Client* client, std::vector<std::string> & args);	
 
 	/* JOIN <channel>[,...]  */
-	void	_JOIN(Client* client, std::vector<std::string> & args);	
+	void	_CMDJOIN(Client* client, std::vector<std::string> & args);	
 
 	/* PART <channel>[,...] */
-	void	_PART(Client* client,  std::vector<std::string> & args);	
+	void	_CMDPART(Client* client,  std::vector<std::string> & args);	
 };
 
 #endif

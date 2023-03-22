@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <sys/socket.h>
 #include "Client.hpp"
 
 class Client;
@@ -20,6 +21,7 @@ class Channel
 		void						addMember(Client *client);
 		void						addOperator(Client *client);
 		void						removeMember(const Client *client);
+		void						_send_msg_to_all_members(const std::string & msg) const;
 
 		bool						isIn(const std::string& name) const;
 		bool						isOp(const std::string& name) const;
@@ -29,6 +31,7 @@ class Channel
 		const std::string		_name;
 		std::vector<Client*>	_members;
 		std::vector<Client*>	_operators;
+
 };
 
 #endif
