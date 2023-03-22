@@ -4,7 +4,8 @@ Client::Client(const int& sockfd) :
 	_name("default"),
 	_nickname(_name),
 	_sockfd(sockfd), 
-	_pass(false)
+	_pass(false),
+	_is_register(false)
 {
 }
 

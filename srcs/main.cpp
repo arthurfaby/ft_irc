@@ -7,6 +7,7 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage error : " << argv[0] << " <port> <password>" << std::endl;
 		return (1);
 	}
+	handle_signal();
 	Server	server(argv[1], argv[2]);
 
 	server.run();
