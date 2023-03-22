@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void	Server::_JOIN(Client* client, std::vector<std::string> & command)
+void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 {
 	std::vector<std::string>	copy(command);
 	std::vector<std::string>	channels;
@@ -39,7 +39,7 @@ void	Server::_JOIN(Client* client, std::vector<std::string> & command)
 		std::cout << (*it)->getName() << std::endl;
 }
 
-void	Server::_INVITE(Client* client, std::vector<std::string> & command)
+void	Server::_CMDINVITE(Client* client, std::vector<std::string> & command)
 {
 	std::string	invit;
 	Client	*dest;
@@ -74,7 +74,7 @@ void	Server::_INVITE(Client* client, std::vector<std::string> & command)
 	this->sendMessage(client, "you are not operator of this channel\n");
 }
 
-void	Server::_NICK(Client* client, std::vector<std::string> &args)
+void	Server::_CMDNICK(Client* client, std::vector<std::string> &args)
 {
 		std::cout << args[1] << std::endl;
 		/*std::cout << args[1].length() << std::endl;*/
@@ -94,13 +94,13 @@ void	Server::_NICK(Client* client, std::vector<std::string> &args)
 		client->setNickname(args[1]);
 }
 
-void	Server::_PASS(Client* client, std::vector<std::string> & args)
+void	Server::_CMDPASS(Client* client, std::vector<std::string> & args)
 {
 	if(args[1] == _password)
 		client->setPass(true);
 }
 
-void	Server::_MODE(Client* client, std::vector<std::string> & command)
+void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 {
 	Channel *channel;
 

@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void	Server::_QUIT(Client* client, std::vector<std::string>& args)
+void	Server::_CMDQUIT(Client* client, std::vector<std::string>& args)
 {
 	std::string	username;
 

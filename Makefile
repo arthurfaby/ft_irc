@@ -5,10 +5,10 @@ SRCS =	srcs/main.cpp					\
 		srcs/Server/Server.cpp			\
 		srcs/Client/Client.cpp			\
 		srcs/Channel/Channel.cpp		\
-		srcs/Server/commands/USER.cpp	\
-		srcs/Server/commands/QUIT.cpp   \
-		srcs/Server/commands/PART.cpp   \
-		srcs/Server/commands/KICK.cpp   \
+		srcs/Server/commands/CMDUSER.cpp	\
+		srcs/Server/commands/CMDQUIT.cpp   \
+		srcs/Server/commands/CMDPART.cpp   \
+		srcs/Server/commands/CMDKICK.cpp   \
 		srcs/Server/Commands.cpp		\
 
 OBJS = ${SRCS:.cpp=.o}

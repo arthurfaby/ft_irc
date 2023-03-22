@@ -1,7 +1,7 @@
 #include "Server.hpp"
 
 
-void	Server::_KICKUSR(Client* client, std::vector<std::string>& args)
+void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 {
 	if (args.size() < 3)
 	{
