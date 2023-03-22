@@ -35,6 +35,7 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 			return ;
 		}
 	}
+	client->setNickname(username);
 	client->setName(username);
 	client->setRegister(true);
 	this->sendMessage(client, "You are now connected as " + username + ".\n");
