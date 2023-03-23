@@ -45,7 +45,7 @@ void	Server::_CMDMSG(Client* client, std::vector<std::string> & args)
 			}
 			if (this->_channels[i]->getName().compare(args[1]) == 0)
 			{
-				this->_channels[i]->_send_msg_to_all_members(this->_channels[i]->getName() + " " + client->getNickname() + ": " + args[2] + "\n");
+				this->_channels[i]->_send_msg_to_all_members(this, this->_channels[i]->getName() + " " + client->getNickname() + ": " + args[2] + "\n");
 			}
 		}
 	}
