@@ -79,6 +79,7 @@ private:
 	fd_set					_writefds;
 	fd_set					_exceptfds;
 
+	void				_remove_empty_channels(void);
 	void				_disconnect_client(Client* client);
 	void				_new_client_connection(void);
 	void				_init_selectfds(void);

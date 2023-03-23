@@ -9,7 +9,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 	}
 	if (args[3][0] != ':')
 	{
-		this->sendMessage(client, "Usage: /CMDKICK <channel>[,...] <user> :<comment>]\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> <:comment>\n");
 		return ;
 	}
 
