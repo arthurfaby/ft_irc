@@ -89,6 +89,11 @@ void	Server::run(void)
 			// new connection
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
+			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
+			{
+				this->_disconnect_client(_clients[i]);
+				continue;
+			}
 			if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
@@ -103,19 +108,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
-				if (std::string(buffer) == "quit\n")
-				{
-					this->_disconnect_client(_clients[i]);
-					continue;
-				}
 			}
-
-			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
-			{
-				this->_disconnect_client(_clients[i]);
-			}
-				// receive
 		}
 		_remove_empty_channels();
 	}

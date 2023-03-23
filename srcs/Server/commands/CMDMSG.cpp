@@ -28,7 +28,12 @@ void	Server::_CMDMSG(Client* client, std::vector<std::string> & args)
 {
 	if (args.size() < 3)
 	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDMSG <nickname>/<channel> <message [...]>\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDMSG <nickname>/<channel> <:message>\n");
+		return ;
+	}
+	if (args[2][0] != ':')
+	{
+		this->sendMessage(client, "[ERROR] : Usage: /CMDMSG <nickname>/<channel> <:message>\n");
 		return ;
 	}
 	std::cout << LOG << "CMDMSG command called by " + client->getNickname() << std::endl;
