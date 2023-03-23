@@ -6,14 +6,14 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 	std::string	message;
 
 	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
-	if (args.size() != 5)
+	if (args.size() != 2)
 	{
-		this->sendMessage(client, "[ERROR] : Usage : /user <user> <mode> <unused> <realname>\n");
+		this->sendMessage(client, "[ERROR] : Usage : /cmduser <user>\n");
 		return ;
 	}
 	if (client->isRegister())
 	{
-		this->sendMessage(client, "You may not reregister.\n");
+		this->sendMessage(client, "[ERROR ] : You may not reregister.\n");
 		return ;
 	}
 	username = args[1];	
