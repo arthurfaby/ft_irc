@@ -154,10 +154,12 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	client->addToBuffer(args);
 	if (client->getBuffer().find("\r\n") == std::string::npos)
 	{
-		/* std::cout << LOG << "Buffer of " << client->getName() << " is not ready." << std::endl; */
+		std::cout << LOG << "Buffer of " << client->getName() << " is not ready";
+		std::cout << "(" << client->getBuffer() << ")." << std::endl;
 		return ;
 	}
-	/* std::cout << LOG << "Buffer of " << client->getName() << " is treatable." << std::endl; */
+	std::cout << LOG << "Buffer of " << client->getName() << " is treatable";
+	std::cout << "(" << client->getBuffer() << ")." << std::endl;
 	args = client->getBuffer();
 	client->resetBuffer();
 	if (args[0] == ' ')
