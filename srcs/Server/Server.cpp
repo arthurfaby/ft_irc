@@ -150,7 +150,16 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	size_t						pos;
 	int							trigger = 0;
 	size_t						index;
-	
+
+	client->addToBuffer(args);
+	if (client->getBuffer().find("\r\n") == std::string::npos)
+	{
+		/* std::cout << LOG << "Buffer of " << client->getName() << " is not ready." << std::endl; */
+		return ;
+	}
+	/* std::cout << LOG << "Buffer of " << client->getName() << " is treatable." << std::endl; */
+	args = client->getBuffer();
+	client->resetBuffer();
 	if (args[0] == ' ')
 	{
 		this->sendMessage(client, "Space before command is not valid\n");
