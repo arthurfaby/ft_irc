@@ -1,5 +1,40 @@
 ## FT_IRC
 
+### List of commands
+
+**CMDNICK** <nickname>
+>Sets a nickname for the user calling it. Can be called multiple times.
+
+**CMDUSER** <username>
+>Sets a username for the user calling it. Can be called only once and is mandatory to start using the other commands (except CMDPASS and CMDQUIT).
+		
+**CMDPASS** <password>
+>Enter the password of the server. It is mandatory to start using the other commands (except CMDQUIT).
+
+**CMDINVITE** <username> <channel>
+>Invites the user in the specified channel.
+	
+**CMDKICK** <channel>[,...] <user> <:reason>
+>Kicks the user from the specified channel(s) and giving him a reason.
+
+**CMDMODE** <username> {+,-}{o}
+>Give the operator status to the user, operator status is need to use this command.
+
+**CMDMSG** <username/channel> <:message>
+>Sends a message to a user or a channel.
+
+**CMDQUIT** <:reason>
+>Disconnects the user from the server. The user needs to give a reason.
+
+**CMDNAMES** <channel>[,...]
+>Lists all the users connected to the channel(s)
+
+**CMDJOIN** <channel>[,...]
+>Joins the specified channel(s)
+
+**CMDPART** <channel>[,...]
+>Leaves the specified channel(s)
+
 ### Useful typedefs
 	
 | Name |  Equivalent | Use case |
