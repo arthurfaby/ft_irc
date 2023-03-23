@@ -11,9 +11,10 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage : /cmduser <user>\n");
 		return ;
 	}
+	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
 	if (client->isRegister())
 	{
-		this->sendMessage(client, "[ERROR ] : You may not reregister.\n");
+		this->sendMessage(client, "[ERROR] : You may not reregister.\n");
 		return ;
 	}
 	username = args[1];	
