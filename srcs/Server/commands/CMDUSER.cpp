@@ -5,9 +5,9 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 	std::string	username;
 	std::string	message;
 
-	if (args.size() != 5)
+	if (args.size() != 2)
 	{
-		this->sendMessage(client, "[ERROR] : Usage : /user <user> <mode> <unused> <realname>\n");
+		this->sendMessage(client, "[ERROR] : Usage : cmduser <user>\n");
 		return ;
 	}
 	std::cout << LOG << "USER command called by " << client->getSockfd() << std::endl;
@@ -19,7 +19,7 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 	username = args[1];	
 	if (username.length() > 9)
 	{
-		this->sendMessage(client, "[ERROR] : Your username is too long (max 9 characters).\n");
+		this->sendMessage(client, "[ERROR] : This username is too long (max 9 characters).\n");
 		return ;
 	}
 	if (username[0] == '#')
@@ -31,7 +31,7 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 	{
 		if (_clients[i]->getName() == username)
 		{
-			this->sendMessage(client, "[ERROR] : Your username is already used.\n");
+			this->sendMessage(client, "[ERROR] : This username is already used.\n");
 			return ;
 		}
 	}
