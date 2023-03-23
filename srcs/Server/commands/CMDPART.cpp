@@ -7,7 +7,7 @@ void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDPART <channel>[,...] <:comment>\n");
 		return;
 	}
-	std::cout << "CMDPART command called by " + client->getNickname() << std::endl;
+	std::cout << "CMDPART command called by " + client->getName() << std::endl;
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;

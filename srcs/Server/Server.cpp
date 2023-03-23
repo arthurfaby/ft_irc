@@ -166,17 +166,14 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		start = end + 1;
 		end = args.find(' ', start);
 	}
-	temp = args.substr(start, end - start);
-	if (temp[0] == ':') //in case there is only one word in message
+	if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
 		parsed_args.push_back(args.substr(start));
-	else if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
-		parsed_args.push_back(args.substr(start));
-	if (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0)
+	if (parsed_args[0].compare("cmdquit") != 0 && (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0))
 	{
 		this->sendMessage(client, "Enter the password with <cmdpass> before using any command\n");
 		return ;
 	}
-	else if (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0)
+	else if (parsed_args[0].compare("cmdquit") != 0 && (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0 ))
 	{
 		this->sendMessage(client, "Register with <cmduser> before using any command\n");
 		return ;
@@ -186,17 +183,15 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 
 void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 {
-	if (args.size() == 0)
+	if (args.size() != 0)
 	{
-		std::cout << "nothing in vector" << std::endl;
-		return ;
-	}
-	for (int i = 0; i < 11; i++)
-	{
-		if (args[0].compare(this->_cmds[i]) == 0)
+		for (int i = 0; i < 11; i++)
 		{
-			(this->*_commands_funcs[i])(client, args);
-			return ;
+			if (args[0].compare(this->_cmds[i]) == 0)
+			{
+				(this->*_commands_funcs[i])(client, args);
+				return ;
+			}
 		}
 	}
 	this->sendMessage(client, "Command not found.\n");

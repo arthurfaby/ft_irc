@@ -12,7 +12,7 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Usage: CMDJOIN <channel>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDJOIN command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDJOIN command called by " << client->getName() << std::endl;
 	pos = copy[1].find(',');
 	while (pos != std::string::npos)
 	{
@@ -59,7 +59,7 @@ void	Server::_CMDINVITE(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Usage: CMDINVITE <nick> <channel>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDINVITE command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDINVITE command called by " << client->getName() << std::endl;
 	dest = _getClient(command[1]);
 	if (!client)
 	{
@@ -92,7 +92,7 @@ void	Server::_CMDNICK(Client* client, std::vector<std::string> &args)
 		this->sendMessage(client, "[ERROR] : Usage: CMDNICK <nick>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDNICK command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDNICK command called by " << client->getName() << std::endl;
 	if (args[1].length() > 9)
 	{
 		this->sendMessage(client, "[ERROR] : Your nickname is too long\n");
@@ -117,7 +117,9 @@ void	Server::_CMDPASS(Client* client, std::vector<std::string> & args)
 		return ;
 	}
 	std::cout << LOG << "CMDPASS command called by " << client->getSockfd() << std::endl;
-	if(args[1] == _password)
+	if (client->getPass() == true)
+		this->sendMessage(client, "[ERROR] : Password has already been entered\n");
+	else if(args[1] == _password)
 	{
 		client->setPass(true);
 		this->sendMessage(client, "Correct password, please register using <cmduser>\n");

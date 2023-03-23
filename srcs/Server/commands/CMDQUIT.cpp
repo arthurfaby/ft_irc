@@ -9,7 +9,7 @@ void	Server::_CMDQUIT(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage : /CMDQUIT [<message>]\n");
 		return ;
 	}
-	std::cout << LOG << "CMDQUIT command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDQUIT command called by " << client->getName() << std::endl;
 	this->sendMessage(client, "You are disconnected.\n");
 	this->_disconnect_client(client);
 }

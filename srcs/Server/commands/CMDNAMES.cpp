@@ -2,7 +2,6 @@
 
 void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 {
-	//gerer plusieurs channel : #42,#43,#44...
 	std::vector<std::string>	names;
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
@@ -26,7 +25,7 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 	}
 	channels.push_back(copy[1]);
 
-	std::cout << LOG << "CMDNAMES command called by " + client->getNickname() << std::endl;
+	std::cout << LOG << "CMDNAMES command called by " + client->getName() << std::endl;
 	for (size_t i = 0; i < channels.size(); ++i)
 	{
 		for (; j < this->_channels.size(); ++j)
@@ -38,13 +37,13 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 			}
 			if (this->_channels[j]->getName().compare(channels[i]) == 0)
 			{
-				if (this->_channels[j]->isIn(client->getNickname()) == false)
+				if (this->_channels[j]->isIn(client->getName()) == false)
 				{
 					this->sendMessage(client, "[ERROR] : You are not in the " + channels[i] + " channel\n");
 					break ;
 				}
 				for (; k < this->_channels[j]->getMembers().size(); ++k)
-					names.push_back(this->_channels[j]->getMembers()[k]->getNickname());
+					names.push_back(this->_channels[j]->getMembers()[k]->getName());
 				res = names[0];
 				for (; l < names.size(); ++l)
 					res.append(" " + names[l]);
