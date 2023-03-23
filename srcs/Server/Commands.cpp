@@ -4,6 +4,7 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 {
 	std::vector<std::string>	copy(command);
 	std::vector<std::string>	channels;
+	Channel						*channel;
 	size_t						pos;
 
 	if(command.size() != 2)
@@ -24,22 +25,25 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 	{
 		if (_doesChannelExists(channels[i]) == true)
 		{
-			Channel	*channel = _getChannel(channels[i]);
+			channel = _getChannel(channels[i]);
 			if (channel->isIn(client->getName()) == false)
 			{
-				channel->_send_msg_to_all_members(channel->getName() + " " + client->getName() + " has joined the channel\n");
+				channel->_send_msg_to_all_members(this, channel->getName() + " " + client->getName() + " has joined the channel\n");
 				this->sendMessage(client, "You have joined the " + channel->getName() + " channel\n");
 				channel->addMember(client);
 			}
 			else
-				this->sendMessage(client, "you are already in this channel\n");
+				this->sendMessage(client, "[ERROR] : You are already in this channel\n");
 		}
 		else
 		{
 			if(channels[i][0] == '#')
+			{
 				_channels.push_back(new Channel(channels[i], client));
+				this->sendMessage(client, "You have joined the " + channels[i] + " channel\n");
+			}
 			else
-				this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+				this->sendMessage(client, "[ERROR] : Channel name must start with '#'\n");
 		}
 	}
 }

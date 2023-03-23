@@ -36,21 +36,10 @@ void	Channel::addOperator(Client *client)
 	this->_operators.push_back(client);
 }
 
-void	Channel::_send_msg_to_all_members(const std::string & msg) const
+void	Channel::_send_msg_to_all_members(Server *server, const std::string & msg) const
 {
-	int	res;
-	std::vector<Client*>::iterator	it;
-	std::vector<Client*>::iterator	ite;
-
 	for (size_t i = 0; i < this->_members.size(); i++)
-	{
-		res = send(this->_members[i]->getSockfd(), msg.c_str(), msg.length(), 0);
-		if (res == -1)
-		{
-			(void)res;
-			//kick le client ?
-		}
-	}
+		server->sendMessage(this->_members[i], msg);
 }
 
 void	Channel::removeMember(const Client *client)
