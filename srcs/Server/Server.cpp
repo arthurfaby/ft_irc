@@ -1,5 +1,7 @@
 #include "Server.hpp"
 
+bool Server::running = true;
+
 Server::Server(char *port, char *password) :
 	_port(std::atoi(port)),
 	_name("ircserver"),
@@ -29,6 +31,15 @@ Server::Server(char *port, char *password) :
 
 Server::~Server(void)
 {
+	size_t	channel_size = _channels.size();
+	size_t	client_size = _clients.size();
+
+	if (_listening_socket > 0)
+		close(_listening_socket);
+	for (size_t i = 0; i < channel_size; ++i)
+		delete _channels[i];
+	for (size_t i = 0; i < client_size; ++i)
+		this->_disconnect_client(_clients[0]);
 }
 
 void	Server::sendMessage(Client* client, const std::string& message)
@@ -51,7 +62,7 @@ void	Server::run(void)
 	char	buffer[1024];
 	int		res;
 
-	while (1)
+	while (running)
 	{
 		// init readfds, writefds and exceptfds
 		this->_init_selectfds();
@@ -64,10 +75,12 @@ void	Server::run(void)
 
 		// select
 		select_res = select(nfds + 1, &_readfds, &_writefds, &_exceptfds, NULL);
+		if (!running)
+			break;
 		if (select_res == -1)
 		{
 			std::cerr << ERROR << "Select failed" << std::endl;
-			return ; // throw exception ?
+			break ; // throw exception ?
 		}
 
 		// treat with FD_ISSET
@@ -92,7 +105,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				//std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
@@ -107,79 +120,70 @@ void	Server::run(void)
 				// receive
 		}
 	}
-}
-
-std::vector<std::string>	Server::_parse_cmds(std::string & args)
-{
-	std::vector<std::string>	parsed_cmds;
-	size_t						start = 0;
-	size_t						end = args.find("\r\n", start);
-
-	while (end != std::string::npos)
-	{
-		if (args.substr(start, end - start).size() > 0)
-			parsed_cmds.push_back(args.substr(start, end - start));
-		start = end + 1;
-		end = args.find("\r\n", start);
-	}
-	parsed_cmds[1] = parsed_cmds[1].substr(parsed_cmds[1].find("\r\n") + 2);
-	return (parsed_cmds);
+	std::cout << LOG << "Running false." << std::endl;
 }
 
 void	Server::_parse_cmd_args(std::string args, Client *client)
 {
 	std::vector<std::string>	parsed_args;
-	std::vector<std::string>	parsed_cmds;
 	std::string					temp;
 	size_t 						start = 0;
 	size_t						end;
 	size_t						pos;
-	int							trigger = 0;
-	size_t						index;
-	
+
+	client->addToBuffer(args);
+	if (client->getBuffer().find("\r\n") == std::string::npos)
+	{
+		std::cout << LOG << "Buffer of " << client->getName() << " is not ready";
+		std::cout << "(" << client->getBuffer() << ")." << std::endl;
+		return ;
+	}
+	std::cout << LOG << "Buffer of " << client->getName() << " is treatable";
+	std::cout << "(" << client->getBuffer() << ")." << std::endl;
+	args = client->getBuffer();
+	client->resetBuffer();
 	if (args[0] == ' ')
 	{
 		this->sendMessage(client, "Space before command is not valid\n");
 		return ;
 	}
-	parsed_cmds.push_back(args);
-	index = parsed_cmds[0].find("\r\n");//checks for multiple commands in one message
-	if (index != std::string::npos && index != parsed_cmds[0].size() - 2)
-	{
-		parsed_cmds = _parse_cmds(parsed_cmds[0]);
-		trigger = 1;
-	}
-	else
-		parsed_cmds[0].resize(parsed_cmds[0].size() - 2);//only one command
-	pos = parsed_cmds[0].find_last_not_of(" ");
+	args.resize(args.size() - 2);//only one command
+	pos = args.find_last_not_of(" ");
 	if (pos != std::string::npos)
-		parsed_cmds[0].erase(pos + 1);//remove trailing spaces
-	(void)pos;
-	for (size_t i = 0; i < parsed_cmds[0].size(); i++)
-		parsed_cmds[0][i] = tolower(parsed_cmds[0][i]);//lowercase the entire string
-	end = parsed_cmds[0].find(' ', start);
+		args.erase(pos + 1);//remove trailing spaces
+	for (size_t i = 0; i < args.size(); i++)
+		args[i] = tolower(args[i]);//lowercase the entire string
+	end = args.find(' ', start);
 	while (end != std::string::npos)
 	{
-		temp = parsed_cmds[0].substr(start, end - start);
+		temp = args.substr(start, end - start);
 		if (temp[0] == ':')
 		{
-			parsed_args.push_back(parsed_cmds[0].substr(start));//puts everything after the ':' in the vector
+			parsed_args.push_back(args.substr(start + 1));//puts everything after the ':' in the vector
 			end = std::string::npos;
 			break ;
 		}
-		if (parsed_cmds[0].substr(start, end - start).size() > 0)
-			parsed_args.push_back(parsed_cmds[0].substr(start, end - start));
+		if (args.substr(start, end - start).size() > 0)
+			parsed_args.push_back(args.substr(start, end - start));
 		start = end + 1;
-		end = parsed_cmds[0].find(' ', start);
+		end = args.find(' ', start);
 	}
-	temp = parsed_cmds[0].substr(start, end - start);
+	temp = args.substr(start, end - start);
 	if (temp[0] == ':') //in case there is only one word in message
-		parsed_args.push_back(parsed_cmds[0].substr(start));
-	else if (parsed_cmds[0].substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
-		parsed_args.push_back(parsed_cmds[0].substr(start));
+		parsed_args.push_back(args.substr(start + 1));
+	else if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
+		parsed_args.push_back(args.substr(start));
+	if (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0)
+	{
+		this->sendMessage(client, "Enter the password with <cmdpass> before using any command\n");
+		return ;
+	}
+	else if (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0)
+	{
+		this->sendMessage(client, "Register with <cmduser> before using any command\n");
+		return ;
+	}
 	this->_call_cmd(parsed_args, client);
-	if (trigger == 1)
-		this->_parse_cmd_args(parsed_cmds[1], client);
 }
 
 void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
@@ -212,8 +216,9 @@ void	Server::_disconnect_client(Client* client)
 		if (*it == client)
 		{
 			std::cout << LOG << "Client " << client->getName() << " has just been disconnected." << std::endl;
-			//this->sendMessage(client, "You have been disconnected by server.");
+			/* this->sendMessage(client, "You have been disconnected by server."); */
 			close(client->getSockfd());
+			delete *it;
 			_clients.erase(it);
 			return ;
 		}

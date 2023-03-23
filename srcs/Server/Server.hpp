@@ -23,6 +23,8 @@ public:
 	Server(char *port, char *password);
 	~Server(void);
 
+	static bool			running;
+
 	//getters / setters
 	int					getPort(void) const;
 	void				setPort(const int & port);
@@ -58,6 +60,7 @@ public:
 	/*int					bind_socket(void) const;
 	int					listen_to_port(void) const;*/
 	
+
 
 private:
 	

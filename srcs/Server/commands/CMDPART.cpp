@@ -2,8 +2,12 @@
 
 void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 {
-	if (args.size() < 3) return;
-
+	if (args.size() < 2)
+	{
+		this->sendMessage(client, "[ERROR] : Usage: /CMDPART <channel>[,...] <comment>\n");
+		return;
+	}
+	std::cout << "CMDPART command called by " + client->getNickname() << std::endl;
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;
@@ -22,12 +26,12 @@ void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 	{
 		if (channels[i][0] != '#')
 		{
-			this->sendMessage(client, "Channel '" + channels[i] + "' is invalid.\n");
+			this->sendMessage(client, "[ERROR] : Channel '" + channels[i] + "' is invalid.\n");
 			continue;
 		}
 		if (!_doesChannelExists(channels[i]))
 		{
-			this->sendMessage(client, "Channel '" + channels[i] + "' does not exists.\n");
+			this->sendMessage(client, "[ERROR] : Channel '" + channels[i] + "' does not exists.\n");
 			continue;
 		}
 		else
@@ -35,8 +39,13 @@ void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 			for (size_t j = 0; j < _channels.size(); ++j)
 				if (channels[i] == _channels[j]->getName())
 					actual = _channels[j];
+			if (!actual->isIn(client->getName()))
+			{
+				this->sendMessage(client, "You are not in the channel " + actual->getName() + ".\n");
+				continue ;
+			}
 			for (size_t j = 0; j < actual->getMembers().size(); ++j)
-				this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has leaved the channel (" + args[2].substr(1) + ").\n");
+				this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has left the channel (" + args[2].substr(1) + ").\n");
 			actual->removeMember(client);
 		}
 	}
