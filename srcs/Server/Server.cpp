@@ -89,7 +89,7 @@ void	Server::run(void)
 			// new connection
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
-					if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
+			if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
 				if (res == -1 || res == 0)
@@ -117,8 +117,32 @@ void	Server::run(void)
 			}
 				// receive
 		}
+		_remove_empty_channels();
 	}
 	std::cout << LOG << "Running false." << std::endl;
+}
+
+void	Server::_remove_empty_channels(void)
+{
+	std::vector<Channel*>::iterator			it = _channels.begin();
+	std::vector<Client*>::const_iterator	it2;
+	size_t									size;
+	
+	for (it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		for (it2 = (*it)->getMembers().begin(); it2 != (*it)->getMembers().end(); ++it2)
+		{
+			size = (*it)->getMembers().size();
+			if (!size)
+			{
+				std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
+				delete *it;
+				_channels.erase(it);
+				it = _channels.begin();
+				break;
+			}
+		}
+	}
 }
 
 void	Server::_parse_cmd_args(std::string args, Client *client)
