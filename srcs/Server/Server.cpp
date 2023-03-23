@@ -99,8 +99,6 @@ void	Server::run(void)
 					else
 						std::cerr << ERROR << "Recv nothing" << std::endl;
 					this->_disconnect_client(_clients[i]);
-					if (_clients[i]->getPass())
-						std::cout << "pass" << std::endl;
 					continue ; // handle rerror
 				}
 				buffer[res] = 0; // put \0
