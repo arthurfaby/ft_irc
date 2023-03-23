@@ -125,22 +125,17 @@ void	Server::run(void)
 void	Server::_remove_empty_channels(void)
 {
 	std::vector<Channel*>::iterator			it = _channels.begin();
-	std::vector<Client*>::const_iterator	it2;
-	size_t									size;
 	
 	for (it = _channels.begin(); it != _channels.end(); ++it)
 	{
-		for (it2 = (*it)->getMembers().begin(); it2 != (*it)->getMembers().end(); ++it2)
+		std::cout << (*it)->getName() << std::endl;
+		if ((*it)->getMembers().begin() == (*it)->getMembers().end())
 		{
-			size = (*it)->getMembers().size();
-			if (!size)
-			{
-				std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
-				delete *it;
-				_channels.erase(it);
-				it = _channels.begin();
-				break;
-			}
+			std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
+			delete *it;
+			_channels.erase(it);
+			it = _channels.begin();
+			break;
 		}
 	}
 }
