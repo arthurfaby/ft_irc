@@ -39,6 +39,11 @@ void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 			for (size_t j = 0; j < _channels.size(); ++j)
 				if (channels[i] == _channels[j]->getName())
 					actual = _channels[j];
+			if (!actual->isIn(client->getName()))
+			{
+				this->sendMessage(client, "You are not in the channel " + actual->getName() + ".\n");
+				continue ;
+			}
 			for (size_t j = 0; j < actual->getMembers().size(); ++j)
 				this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has left the channel (" + args[2].substr(1) + ").\n");
 			actual->removeMember(client);

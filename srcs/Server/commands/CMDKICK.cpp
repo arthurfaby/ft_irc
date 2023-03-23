@@ -7,7 +7,15 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> [<comment>]\n");
 		return;
 	}
-	std::cout << LOG << "CMDKICK command called by " + client->getNickname() << std::endl;
+	if (args.size() > 3)
+	{
+		if (args[3][0] != ':')
+		{
+			this->sendMessage(client, "Usage: /CMDKICK <channel>[,...] <user> [:<comment>]\n");
+			return ;
+		}
+	}
+
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;
@@ -45,15 +53,27 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 			if (actual->isOp(client->getName()) == false)
 			{
 				this->sendMessage(client, "[ERROR] : You are not operator of this channel\n");
-				return;
+				continue;
 			}
 			if (actual->isIn(args[2]))
 			{
 				actual->removeMember(_getClient(args[2]));
 				this->sendMessage(client, "You kicked " + args[2] + ".\n");
+				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getName() + ".\n");
+				if (args.size() < 4)
+					this->sendMessage(this->_getClient(args[2]), "Reason : unspecified.\n");
+				else
+					this->sendMessage(this->_getClient(args[2]), "Reason : " + args[3].substr(1) + ".\n");
+				for (size_t j = 0; j < actual->getMembers().size(); ++j)
+					if (actual->getMembers()[j] != client)
+						this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has been kicked by " + client->getName() + ".\n");
+
 			}
-			/* for (size_t j = 0; j < actual->getMembers().size(); ++j) */
-				/* this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has leaved the channel (" + args[2].substr(1) + ").\n"); */
+			else
+			{
+				this->sendMessage(client, "User " + args[2] + " is not in channel (" + actual->getName() + ").\n");
+				continue;
+			}
 		}
 	}
 }

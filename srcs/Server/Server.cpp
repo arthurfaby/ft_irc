@@ -1,5 +1,7 @@
 #include "Server.hpp"
 
+bool Server::running = true;
+
 Server::Server(char *port, char *password) :
 	_port(std::atoi(port)),
 	_name("ircserver"),
@@ -29,6 +31,15 @@ Server::Server(char *port, char *password) :
 
 Server::~Server(void)
 {
+	size_t	channel_size = _channels.size();
+	size_t	client_size = _clients.size();
+
+	if (_listening_socket > 0)
+		close(_listening_socket);
+	for (size_t i = 0; i < channel_size; ++i)
+		delete _channels[i];
+	for (size_t i = 0; i < client_size; ++i)
+		this->_disconnect_client(_clients[0]);
 }
 
 void	Server::sendMessage(Client* client, const std::string& message)
@@ -51,7 +62,7 @@ void	Server::run(void)
 	char	buffer[1024];
 	int		res;
 
-	while (1)
+	while (running)
 	{
 		// init readfds, writefds and exceptfds
 		this->_init_selectfds();
@@ -64,10 +75,12 @@ void	Server::run(void)
 
 		// select
 		select_res = select(nfds + 1, &_readfds, &_writefds, &_exceptfds, NULL);
+		if (!running)
+			break;
 		if (select_res == -1)
 		{
 			std::cerr << ERROR << "Select failed" << std::endl;
-			return ; // throw exception ?
+			break ; // throw exception ?
 		}
 
 		// treat with FD_ISSET
@@ -92,7 +105,7 @@ void	Server::run(void)
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				//std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
+				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
 				if (std::string(buffer) == "quit\n")
 				{
 					this->_disconnect_client(_clients[i]);
@@ -107,6 +120,7 @@ void	Server::run(void)
 				// receive
 		}
 	}
+	std::cout << LOG << "Running false." << std::endl;
 }
 
 void	Server::_parse_cmd_args(std::string args, Client *client)
@@ -116,7 +130,18 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	size_t 						start = 0;
 	size_t						end;
 	size_t						pos;
-	
+
+	client->addToBuffer(args);
+	if (client->getBuffer().find("\r\n") == std::string::npos)
+	{
+		std::cout << LOG << "Buffer of " << client->getName() << " is not ready";
+		std::cout << "(" << client->getBuffer() << ")." << std::endl;
+		return ;
+	}
+	std::cout << LOG << "Buffer of " << client->getName() << " is treatable";
+	std::cout << "(" << client->getBuffer() << ")." << std::endl;
+	args = client->getBuffer();
+	client->resetBuffer();
 	if (args[0] == ' ')
 	{
 		this->sendMessage(client, "Space before command is not valid\n");
@@ -191,8 +216,9 @@ void	Server::_disconnect_client(Client* client)
 		if (*it == client)
 		{
 			std::cout << LOG << "Client " << client->getName() << " has just been disconnected." << std::endl;
-			//this->sendMessage(client, "You have been disconnected by server.");
+			/* this->sendMessage(client, "You have been disconnected by server."); */
 			close(client->getSockfd());
+			delete *it;
 			_clients.erase(it);
 			return ;
 		}
