@@ -25,15 +25,17 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 			if (channel->isIn(client->getName()) == false)
 			{
 				channel->addMember(client);
-				//msg a tous les membre du channel;
 			}
 			else
 				this->sendMessage(client, "you are already in this channel\n");
-			return;
 		}
-		if(channels[i][0] != '#')
-			this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
-		_channels.push_back(new Channel(command[1], client));
+		else
+		{
+			if(channels[i][0] == '#')
+				_channels.push_back(new Channel(channels[i], client));
+			else
+				this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+		}
 	}
 	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++)
 		std::cout << (*it)->getName() << std::endl;
