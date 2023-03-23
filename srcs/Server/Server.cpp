@@ -109,77 +109,56 @@ void	Server::run(void)
 	}
 }
 
-std::vector<std::string>	Server::_parse_cmds(std::string & args)
-{
-	std::vector<std::string>	parsed_cmds;
-	size_t						start = 0;
-	size_t						end = args.find("\r\n", start);
-
-	while (end != std::string::npos)
-	{
-		if (args.substr(start, end - start).size() > 0)
-			parsed_cmds.push_back(args.substr(start, end - start));
-		start = end + 1;
-		end = args.find("\r\n", start);
-	}
-	parsed_cmds[1] = parsed_cmds[1].substr(parsed_cmds[1].find("\r\n") + 2);
-	return (parsed_cmds);
-}
-
 void	Server::_parse_cmd_args(std::string args, Client *client)
 {
 	std::vector<std::string>	parsed_args;
-	std::vector<std::string>	parsed_cmds;
 	std::string					temp;
 	size_t 						start = 0;
 	size_t						end;
 	size_t						pos;
-	int							trigger = 0;
-	size_t						index;
 	
 	if (args[0] == ' ')
 	{
 		this->sendMessage(client, "Space before command is not valid\n");
 		return ;
 	}
-	parsed_cmds.push_back(args);
-	index = parsed_cmds[0].find("\r\n");//checks for multiple commands in one message
-	if (index != std::string::npos && index != parsed_cmds[0].size() - 2)
-	{
-		parsed_cmds = _parse_cmds(parsed_cmds[0]);
-		trigger = 1;
-	}
-	else
-		parsed_cmds[0].resize(parsed_cmds[0].size() - 2);//only one command
-	pos = parsed_cmds[0].find_last_not_of(" ");
+	args.resize(args.size() - 2);//only one command
+	pos = args.find_last_not_of(" ");
 	if (pos != std::string::npos)
-		parsed_cmds[0].erase(pos + 1);//remove trailing spaces
-	(void)pos;
-	for (size_t i = 0; i < parsed_cmds[0].size(); i++)
-		parsed_cmds[0][i] = tolower(parsed_cmds[0][i]);//lowercase the entire string
-	end = parsed_cmds[0].find(' ', start);
+		args.erase(pos + 1);//remove trailing spaces
+	for (size_t i = 0; i < args.size(); i++)
+		args[i] = tolower(args[i]);//lowercase the entire string
+	end = args.find(' ', start);
 	while (end != std::string::npos)
 	{
-		temp = parsed_cmds[0].substr(start, end - start);
+		temp = args.substr(start, end - start);
 		if (temp[0] == ':')
 		{
-			parsed_args.push_back(parsed_cmds[0].substr(start + 1));//puts everything after the ':' in the vector
+			parsed_args.push_back(args.substr(start + 1));//puts everything after the ':' in the vector
 			end = std::string::npos;
 			break ;
 		}
-		if (parsed_cmds[0].substr(start, end - start).size() > 0)
-			parsed_args.push_back(parsed_cmds[0].substr(start, end - start));
+		if (args.substr(start, end - start).size() > 0)
+			parsed_args.push_back(args.substr(start, end - start));
 		start = end + 1;
-		end = parsed_cmds[0].find(' ', start);
+		end = args.find(' ', start);
 	}
-	temp = parsed_cmds[0].substr(start, end - start);
+	temp = args.substr(start, end - start);
 	if (temp[0] == ':') //in case there is only one word in message
-		parsed_args.push_back(parsed_cmds[0].substr(start + 1));
-	else if (parsed_cmds[0].substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
-		parsed_args.push_back(parsed_cmds[0].substr(start));
+		parsed_args.push_back(args.substr(start + 1));
+	else if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
+		parsed_args.push_back(args.substr(start));
+	if (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0)
+	{
+		this->sendMessage(client, "Enter the password with <cmdpass> before using any command\n");
+		return ;
+	}
+	else if (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0)
+	{
+		this->sendMessage(client, "Register with <cmduser> before using any command\n");
+		return ;
+	}
 	this->_call_cmd(parsed_args, client);
-	if (trigger == 1)
-		this->_parse_cmd_args(parsed_cmds[1], client);
 }
 
 void	Server::_call_cmd(std::vector<std::string> & args, Client *client)

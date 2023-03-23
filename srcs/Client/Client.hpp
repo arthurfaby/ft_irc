@@ -19,13 +19,14 @@ public:
 	void			setRegister(const bool& is_register);
 	void			setNickname(const std::string& nickname);
 
-
 	// Getters
 	const bool&				getPass(void) const;
 	const std::string&		getName(void) const;
 	const int&				getSockfd(void) const;
 	const bool&				isRegister(void) const;
 	const std::string&		getNickname(void)const;
+
+private:
 
 	std::string				_name;		// Unique name of the client (max 9 characters)
 	std::string				_nickname;

@@ -1,14 +1,13 @@
 #include "Server.hpp"
 
-
 void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 {
 	if (args.size() < 3)
 	{
-		this->sendMessage(client, "usage: KICK <channel>[,...] <user> [<comment>]\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> [<comment>]\n");
 		return;
 	}
-
+	std::cout << LOG << "CMDKICK command called by " + client->getNickname() << std::endl;
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;
@@ -25,19 +24,19 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 
 	if (!_doesClientExists(args[2]))
 	{
-		this->sendMessage(client, "User '" + args[2] + "' does not exists.\n");
+		this->sendMessage(client, "[ERROR] : User '" + args[2] + "' does not exists.\n");
 		return ;
 	}
 	for (size_t i = 0; i < channels.size(); ++i)
 	{
 		if (channels[i][0] != '#')
 		{
-			this->sendMessage(client, "Channel '" + channels[i] + "' is invalid.\n");
+			this->sendMessage(client, "[ERROR] : Channel '" + channels[i] + "' is invalid.\n");
 			continue;
 		}
 		if (!_doesChannelExists(channels[i]))
 		{
-			this->sendMessage(client, "Channel '" + channels[i] + "' does not exists.\n");
+			this->sendMessage(client, "[ERROR] : Channel '" + channels[i] + "' does not exists.\n");
 			continue;
 		}
 		else
@@ -45,7 +44,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 			actual = _getChannel(channels[i]);
 			if (actual->isOp(client->getName()) == false)
 			{
-				this->sendMessage(client, "you are not operator of this channel\n");
+				this->sendMessage(client, "[ERROR] : You are not operator of this channel\n");
 				return;
 			}
 			if (actual->isIn(args[2]))
