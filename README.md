@@ -214,9 +214,6 @@ struct in_addr {
 **ntohs**
 > converts *netshort* from network byte order to hsot byte order.
 
-**poll**
-> 
-
 **recv**
 > may be used to receive data on both connectionless and connection-oriented sockets. Same as [**read(2)**](https://man7.org/linux/man-pages/man2/read.2.html) function but with flags (see [**recv man**](https://man7.org/linux/man-pages/man2/recv.2.html) for further details).
 
