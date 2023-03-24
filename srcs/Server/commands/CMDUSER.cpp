@@ -29,7 +29,7 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 	}
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i]->getName() == username)
+		if (_clients[i]->getName() == username || _clients[i]->getNickname() == username)
 		{
 			this->sendMessage(client, "[ERROR] : This username is already used.\n");
 			return ;

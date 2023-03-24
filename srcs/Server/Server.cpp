@@ -180,6 +180,8 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	}
 	if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
 		parsed_args.push_back(args.substr(start));
+	else
+		return ;
 	if (parsed_args[0].compare("cmdquit") != 0 && (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0))
 	{
 		this->sendMessage(client, "Enter the password with <cmdpass> before using any command\n");
