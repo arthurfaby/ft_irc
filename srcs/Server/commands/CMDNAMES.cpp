@@ -13,7 +13,7 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 
 	if (args.size() != 2)
 	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDNAMES <channel>[,...]\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDNAMES <channel>[,...].\n");
 		return ;
 	}
 	pos = copy[1].find(',');
@@ -28,18 +28,18 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 	std::cout << LOG << "CMDNAMES command called by " + client->getName() << std::endl;
 	for (size_t i = 0; i < channels.size(); ++i)
 	{
+		if (_doesChannelExists(channels[i]) == false)
+		{
+			this->sendMessage(client, "[ERROR] : Channel " + channels[i] + " does not exist.\n");
+			break ;
+		}
 		for (; j < this->_channels.size(); ++j)
 		{
-			if (_doesChannelExists(channels[i]) == false)
-			{
-				this->sendMessage(client, "[ERROR] : Channel " + channels[i] + " does not exist\n");
-				break ;
-			}
 			if (this->_channels[j]->getName().compare(channels[i]) == 0)
 			{
 				if (this->_channels[j]->isIn(client->getNickname()) == false)
 				{
-					this->sendMessage(client, "[ERROR] : You are not in the " + channels[i] + " channel\n");
+					this->sendMessage(client, "[ERROR] : You are not in the " + channels[i] + " channel.\n");
 					break ;
 				}
 				for (; k < this->_channels[j]->getMembers().size(); ++k)
@@ -47,7 +47,7 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 				res = names[0];
 				for (; l < names.size(); ++l)
 					res.append(" " + names[l]);
-				this->sendMessage(client, "Users in " + channels[i] + ": " + res + "\n");
+				this->sendMessage(client, "Users in " + channels[i] + ": " + res + ".\n");
 				break ;
 			}
 		}

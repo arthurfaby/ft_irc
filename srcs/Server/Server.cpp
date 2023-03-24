@@ -121,7 +121,6 @@ void	Server::_remove_empty_channels(void)
 	
 	for (it = _channels.begin(); it != _channels.end(); ++it)
 	{
-		std::cout << (*it)->getName() << std::endl;
 		if ((*it)->getMembers().begin() == (*it)->getMembers().end())
 		{
 			std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
@@ -199,7 +198,7 @@ void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 {
 	if (args.size() != 0)
 	{
-		for (int i = 0; i < 11; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			if (args[0].compare(this->_cmds[i]) == 0)
 			{
@@ -216,6 +215,14 @@ void	Server::_disconnect_client(Client* client)
 	std::vector<Client*>::iterator	it;
 	std::vector<Client*>::iterator	ite;
 
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->isIn(client->getNickname()))
+		{
+			_channels[i]->removeMember(client);
+			_channels[i]->_send_msg_to_all_members(this, _channels[i]->getName() + " " + client->getNickname() + " has left the channel.\n");
+		}
+	}
 	it = _clients.begin();
 	ite = _clients.end();
 	for (; it != ite; ++it)
@@ -230,6 +237,7 @@ void	Server::_disconnect_client(Client* client)
 			return ;
 		}
 	}
+
 }
 
 void	Server::_new_client_connection(void)
@@ -327,6 +335,7 @@ void	Server::_init_commands_funcs(void)
 	this->_commands_funcs[8] = (&Server::_CMDNAMES);
 	this->_commands_funcs[9] = (&Server::_CMDJOIN);
 	this->_commands_funcs[10] = (&Server::_CMDPART);
+	this->_commands_funcs[11] = (&Server::_CMDWHOAMI);
 }
 
 void	Server::_init_cmds(void)
@@ -342,6 +351,7 @@ void	Server::_init_cmds(void)
 	this->_cmds[8] = "cmdnames";
 	this->_cmds[9] = "cmdjoin";
 	this->_cmds[10] = "cmdpart";
+	this->_cmds[11] = "cmdwhoami";
 }
 
 bool	Server::_doesChannelExists(const std::string& name) const

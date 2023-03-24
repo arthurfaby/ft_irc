@@ -31,7 +31,7 @@ void	Server::_CMDMSG(Client* client, std::vector<std::string> & args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDMSG <nickname>/<channel> <:message>\n");
 		return ;
 	}
-	if (args[2][0] != ':')
+	if (args[2][0] != ':' || args[2][1] == '\0')
 	{
 		this->sendMessage(client, "[ERROR] : Usage: /CMDMSG <nickname>/<channel> <:message>\n");
 		return ;
@@ -69,6 +69,7 @@ void	Server::_CMDMSG(Client* client, std::vector<std::string> & args)
 			if (this->_clients[i]->getNickname().compare(args[1]) == 0)
 			{
 				this->sendMessage(this->_clients[i], client->getNickname() + ": " + args[2].substr(1) + "\n");
+				this->sendMessage(client, "You just sent '" + args[2].substr(1) + "' to " + _clients[i]->getNickname() + ".\n");
 				return ;
 			}
 		}

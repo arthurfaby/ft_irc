@@ -7,7 +7,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> <:comment>\n");
 		return;
 	}
-	if (args[3][0] != ':')
+	if (args[3][0] != ':' || args[3][1] == '\0')
 	{
 		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> <:comment>\n");
 		return ;
@@ -56,7 +56,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 			{
 				actual->removeMember(_getClient(args[2]));
 				this->sendMessage(client, "You kicked " + args[2] + ".\n");
-				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getNickname() + ".\n");
+				this->sendMessage(this->_getClient(args[2]), "You have been kicked from " + actual->getName() + " by " + client->getNickname() + ".\n");
 				this->sendMessage(this->_getClient(args[2]), "Reason : " + args[3].substr(1) + ".\n");
 				for (size_t j = 0; j < actual->getMembers().size(); ++j)
 					if (actual->getMembers()[j] != client)

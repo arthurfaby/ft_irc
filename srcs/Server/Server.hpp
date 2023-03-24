@@ -70,8 +70,8 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::string				_cmds[11];
-	void					(Server::*_commands_funcs[11])(Client *client, std::vector<std::string> & args);
+	std::string				_cmds[12];
+	void					(Server::*_commands_funcs[12])(Client *client, std::vector<std::string> & args);
 	std::vector<Client *>	_clients; // temp attributs of sockets waiting for Client class
 	std::vector<Channel *>	_channels;
 	struct sockaddr_in		_address;
@@ -100,40 +100,30 @@ private:
 	void						_parse_cmd_args(std::string args, Client *client);
 	void						_call_cmd(std::vector<std::string> & args, Client *client);
 
-	/* NICK <nickname> */
 	void	_CMDNICK(Client* client, std::vector<std::string> &args);
 
-	/* USER <user> <mode> <unused> <realname> set only username to user. */
 	void	_CMDUSER(Client* client, std::vector<std::string> & args);
 	
-	/* PASS <password> */
-	// Check if password is correct, then set client to connected status
 	void	_CMDPASS(Client* client, std::vector<std::string> & args);
 
-	/* INVITE <nickname> [<channel>] */
 	void	_CMDINVITE(Client* client, std::vector<std::string> & args);
 
-	/* KICK <channel>[,...] <user> [<comment>]*/
 	void	_CMDKICK(Client* client, std::vector<std::string> & args);
 
-	/* MODE <nickname> {+,-}{o} */
 	void	_CMDMODE(Client* client, std::vector<std::string> & args);	
 
-	/* MSG <nickname> <message> */
 	void	_CMDMSG(Client* client, std::vector<std::string> & args);	
 	bool	_check_channel_or_user_exists(const std::string dest, Client *client);
 
-	/* QUIT <quit message> */
 	void	_CMDQUIT(Client* client, std::vector<std::string> & args);	
 
-	/* NAMES [<channel>,...] */
 	void	_CMDNAMES(Client* client, std::vector<std::string> & args);	
 
-	/* JOIN <channel>[,...]  */
 	void	_CMDJOIN(Client* client, std::vector<std::string> & args);	
 
-	/* PART <channel>[,...] */
 	void	_CMDPART(Client* client,  std::vector<std::string> & args);	
+
+	void	_CMDWHOAMI(Client* client, std::vector<std::string> & args);
 };
 
 #endif

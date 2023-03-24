@@ -50,13 +50,8 @@ void	Channel::removeMember(const Client *client)
 	it = _members.begin();
 	ite = _members.end();
 	for (; it != ite; ++it)
-	{
 		if (*it == client)
-		{
-			std::cout << client->getName() << " has left the channel." << std::endl;
 			_members.erase(it);
-		}
-	}
 	removeOperator(client);
 }
 void	Channel::removeOperator(const Client *client)
