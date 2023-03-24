@@ -138,9 +138,9 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 		return;
 	}
 	std::cout << LOG << "CMDMODE command called by " << client->getSockfd() << std::endl;
-	if (command[1] != "-o")
+	if (command[1] != "-o" && command[1] != "+o")
 	{
-		this->sendMessage(client, "[ERROR] : Usage: mode -o <nick> <channel>\n");
+		this->sendMessage(client, "[ERROR] : Usage: mode {-,+}o <nick> <channel>\n");
 		return;
 	}
 	if (_doesClientExists(command[2]) == false)
@@ -150,7 +150,7 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 	}
 	if (_doesChannelExists(command[3]) == false)
 	{
-		this->sendMessage(client, "[ERROR] : Channel	doesn't exist\n");
+		this->sendMessage(client, "[ERROR] : Channel doesn't exist\n");
 		return;
 	}
 	channel = _getChannel(command[3]);
@@ -169,5 +169,8 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Client is already operator\n");
 		return;
 	}
-	channel->addOperator(_getClient(command[2]));
+	if (command[1] == "+o")
+		channel->addOperator(_getClient(command[2]));
+	if (command[1] == "-o")
+		channel->removeOperator(_getClient(command[2]));
 }

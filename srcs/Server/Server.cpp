@@ -355,7 +355,7 @@ bool	Server::_doesChannelExists(const std::string& name) const
 bool	Server::_doesClientExists(const std::string& name) const
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
-		if (_clients[i]->getName() == name)
+		if (_clients[i]->getNickname() == name)
 			return (true);
 	return (false);
 }
@@ -371,7 +371,7 @@ Channel*	Server::_getChannel(const std::string& name)
 Client*	Server::_getClient(const std::string& name)
 {
 	for  (size_t i = 0; i < _clients.size(); ++i)
-		if (name == _clients[i]->getName())
+		if (name == _clients[i]->getNickname())
 			return (_clients[i]);
 	return (NULL);
 }

@@ -37,13 +37,13 @@ void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 			}
 			if (this->_channels[j]->getName().compare(channels[i]) == 0)
 			{
-				if (this->_channels[j]->isIn(client->getName()) == false)
+				if (this->_channels[j]->isIn(client->getNickname()) == false)
 				{
 					this->sendMessage(client, "[ERROR] : You are not in the " + channels[i] + " channel\n");
 					break ;
 				}
 				for (; k < this->_channels[j]->getMembers().size(); ++k)
-					names.push_back(this->_channels[j]->getMembers()[k]->getName());
+					names.push_back(this->_channels[j]->getMembers()[k]->getNickname());
 				res = names[0];
 				for (; l < names.size(); ++l)
 					res.append(" " + names[l]);

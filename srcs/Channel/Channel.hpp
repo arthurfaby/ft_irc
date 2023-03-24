@@ -23,6 +23,7 @@ class Channel
 		const std::vector<Client*>&	getOperators(void) const;
 		void						addMember(Client *client);
 		void						addOperator(Client *client);
+		void						removeOperator(const Client *client);
 		void						removeMember(const Client *client);
 		void						_send_msg_to_all_members(Server *server, const std::string & msg) const;
 
