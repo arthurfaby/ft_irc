@@ -4,6 +4,7 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 {
 	std::vector<std::string>	copy(command);
 	std::vector<std::string>	channels;
+	Channel						*channel;
 	size_t						pos;
 
 	if(command.size() != 2)
@@ -11,7 +12,7 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Usage: CMDJOIN <channel>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDJOIN command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDJOIN command called by " << client->getName() << std::endl;
 	pos = copy[1].find(',');
 	while (pos != std::string::npos)
 	{
@@ -24,22 +25,25 @@ void	Server::_CMDJOIN(Client* client, std::vector<std::string> & command)
 	{
 		if (_doesChannelExists(channels[i]) == true)
 		{
-			Channel	*channel = _getChannel(channels[i]);
+			channel = _getChannel(channels[i]);
 			if (channel->isIn(client->getName()) == false)
 			{
-				channel->_send_msg_to_all_members(channel->getName() + " " + client->getName() + " has joined the channel\n");
+				channel->_send_msg_to_all_members(this, channel->getName() + " " + client->getName() + " has joined the channel\n");
 				this->sendMessage(client, "You have joined the " + channel->getName() + " channel\n");
 				channel->addMember(client);
 			}
 			else
-				this->sendMessage(client, "you are already in this channel\n");
+				this->sendMessage(client, "[ERROR] : You are already in this channel\n");
 		}
 		else
 		{
 			if(channels[i][0] == '#')
+			{
 				_channels.push_back(new Channel(channels[i], client));
+				this->sendMessage(client, "You have joined the " + channels[i] + " channel\n");
+			}
 			else
-				this->sendMessage(client, "No channel joined. Try /join #<channel>\n");
+				this->sendMessage(client, "[ERROR] : Channel name must start with '#'\n");
 		}
 	}
 }
@@ -55,7 +59,7 @@ void	Server::_CMDINVITE(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Usage: CMDINVITE <nick> <channel>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDINVITE command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDINVITE command called by " << client->getName() << std::endl;
 	dest = _getClient(command[1]);
 	if (!client)
 	{
@@ -88,7 +92,7 @@ void	Server::_CMDNICK(Client* client, std::vector<std::string> &args)
 		this->sendMessage(client, "[ERROR] : Usage: CMDNICK <nick>\n");
 		return ;
 	}
-	std::cout << LOG << "CMDNICK command called by " << client->getNickname() << std::endl;
+	std::cout << LOG << "CMDNICK command called by " << client->getName() << std::endl;
 	if (args[1].length() > 9)
 	{
 		this->sendMessage(client, "[ERROR] : Your nickname is too long\n");
@@ -113,7 +117,9 @@ void	Server::_CMDPASS(Client* client, std::vector<std::string> & args)
 		return ;
 	}
 	std::cout << LOG << "CMDPASS command called by " << client->getSockfd() << std::endl;
-	if(args[1] == _password)
+	if (client->getPass() == true)
+		this->sendMessage(client, "[ERROR] : Password has already been entered\n");
+	else if(args[1] == _password)
 	{
 		client->setPass(true);
 		this->sendMessage(client, "Correct password, please register using <cmduser>\n");
@@ -144,7 +150,7 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 	}
 	if (_doesChannelExists(command[3]) == false)
 	{
-		this->sendMessage(client, "[ERROR] : Channel	doesn't exist\n");
+		this->sendMessage(client, "[ERROR] : Channel doesn't exist\n");
 		return;
 	}
 	channel = _getChannel(command[3]);

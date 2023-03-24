@@ -2,33 +2,58 @@
 
 void	Server::_CMDNAMES(Client* client, std::vector<std::string> & args)
 {
-	//gerer plusieurs channel : #42,#43,#44...
 	std::vector<std::string>	names;
+	std::vector<std::string>	copy(args);
+	std::vector<std::string>	channels;
 	std::string					res;
+	size_t						pos;
+	size_t						j = 0;
+	size_t						k = 0;
+	size_t						l = 1;
 
 	if (args.size() != 2)
 	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDNAMES <channel>\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDNAMES <channel>[,...]\n");
 		return ;
 	}
-	std::cout << LOG << "CMDNAMES command called by " + client->getNickname() << std::endl;
-	for (size_t i = 0; i < this->_channels.size(); i++)
+	pos = copy[1].find(',');
+	while (pos != std::string::npos)
 	{
-		if (this->_channels[i]->getName().compare(args[1]) == 0)
-		{
-			if (this->_channels[i]->isIn(client->getNickname()) == false)
-			{
-				this->sendMessage(client, "[ERROR] : You are not in the " + args[1] + " channel\n");
-				return ;
-			}
-			for (size_t j = 0; j < this->_channels[i]->getMembers().size(); j++)
-				names.push_back(this->_channels[i]->getMembers()[j]->getNickname());
-			res = names[0];
-			for (size_t i = 1; i < names.size(); i++)
-				res.append(" " + names[i]);
-			this->sendMessage(client, "Users in " + args[1] + ": " + res + "\n");
-			return ;
-		}
+		channels.push_back(copy[1].substr(0, pos));
+		copy[1].erase(0, pos + 1);
+		pos = copy[1].find(',');
 	}
-	this->sendMessage(client, "[ERROR] : Channel " + args[1] + " does not exist\n");
+	channels.push_back(copy[1]);
+
+	std::cout << LOG << "CMDNAMES command called by " + client->getName() << std::endl;
+	for (size_t i = 0; i < channels.size(); ++i)
+	{
+		for (; j < this->_channels.size(); ++j)
+		{
+			if (_doesChannelExists(channels[i]) == false)
+			{
+				this->sendMessage(client, "[ERROR] : Channel " + channels[i] + " does not exist\n");
+				break ;
+			}
+			if (this->_channels[j]->getName().compare(channels[i]) == 0)
+			{
+				if (this->_channels[j]->isIn(client->getNickname()) == false)
+				{
+					this->sendMessage(client, "[ERROR] : You are not in the " + channels[i] + " channel\n");
+					break ;
+				}
+				for (; k < this->_channels[j]->getMembers().size(); ++k)
+					names.push_back(this->_channels[j]->getMembers()[k]->getNickname());
+				res = names[0];
+				for (; l < names.size(); ++l)
+					res.append(" " + names[l]);
+				this->sendMessage(client, "Users in " + channels[i] + ": " + res + "\n");
+				break ;
+			}
+		}
+		j = 0;
+		k = 0;
+		l = 1;
+		names.clear();
+	}
 }

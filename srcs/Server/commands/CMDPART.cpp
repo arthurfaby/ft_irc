@@ -2,12 +2,17 @@
 
 void	Server::_CMDPART(Client* client, std::vector<std::string>& args)
 {
-	if (args.size() < 2)
+	if (args.size() < 3)
 	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDPART <channel>[,...] <comment>\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDPART <channel>[,...] <:comment>\n");
 		return;
 	}
-	std::cout << "CMDPART command called by " + client->getNickname() << std::endl;
+	std::cout << "CMDPART command called by " + client->getName() << std::endl;
+	if (args[2][0] != ':')
+	{
+		this->sendMessage(client, "[ERROR] : Usage: /CMDPART <channel>[,...] <:comment>\n");
+		return;
+	}
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;

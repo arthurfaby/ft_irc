@@ -89,7 +89,12 @@ void	Server::run(void)
 			// new connection
 		for (size_t i = 0; i < _clients.size(); ++i)
 		{
-					if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
+			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
+			{
+				this->_disconnect_client(_clients[i]);
+				continue;
+			}
+			if (FD_ISSET(_clients[i]->getSockfd(), &_readfds))
 			{
 				res = recv(_clients[i]->getSockfd(), buffer, 1024, 0);
 				if (res == -1 || res == 0)
@@ -99,28 +104,33 @@ void	Server::run(void)
 					else
 						std::cerr << ERROR << "Recv nothing" << std::endl;
 					this->_disconnect_client(_clients[i]);
-					if (_clients[i]->getPass())
-						std::cout << "pass" << std::endl;
 					continue ; // handle rerror
 				}
 				buffer[res] = 0; // put \0
 				this->_parse_cmd_args(buffer, _clients[i]);
-				std::cout << LOG << "Message received from " << _clients[i]->getName() << "(" << _clients[i]->getSockfd() << ") : '" << buffer << "'" << std::endl;
-				if (std::string(buffer) == "quit\n")
-				{
-					this->_disconnect_client(_clients[i]);
-					continue;
-				}
 			}
-
-			if (FD_ISSET(_clients[i]->getSockfd(), &_exceptfds))
-			{
-				this->_disconnect_client(_clients[i]);
-			}
-				// receive
 		}
+		_remove_empty_channels();
 	}
 	std::cout << LOG << "Running false." << std::endl;
+}
+
+void	Server::_remove_empty_channels(void)
+{
+	std::vector<Channel*>::iterator			it = _channels.begin();
+	
+	for (it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		std::cout << (*it)->getName() << std::endl;
+		if ((*it)->getMembers().begin() == (*it)->getMembers().end())
+		{
+			std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
+			delete *it;
+			_channels.erase(it);
+			it = _channels.begin();
+			break;
+		}
+	}
 }
 
 void	Server::_parse_cmd_args(std::string args, Client *client)
@@ -159,7 +169,7 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		temp = args.substr(start, end - start);
 		if (temp[0] == ':')
 		{
-			parsed_args.push_back(args.substr(start + 1));//puts everything after the ':' in the vector
+			parsed_args.push_back(args.substr(start));//puts everything after the ':' in the vector
 			end = std::string::npos;
 			break ;
 		}
@@ -168,17 +178,14 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 		start = end + 1;
 		end = args.find(' ', start);
 	}
-	temp = args.substr(start, end - start);
-	if (temp[0] == ':') //in case there is only one word in message
-		parsed_args.push_back(args.substr(start + 1));
-	else if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
+	if (args.substr(start, end - start).size() > 0 && end == std::string::npos)//in case there is only one arg
 		parsed_args.push_back(args.substr(start));
-	if (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0)
+	if (parsed_args[0].compare("cmdquit") != 0 && (client->getPass() == false && parsed_args[0].compare("cmdpass") != 0))
 	{
 		this->sendMessage(client, "Enter the password with <cmdpass> before using any command\n");
 		return ;
 	}
-	else if (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0)
+	else if (parsed_args[0].compare("cmdquit") != 0 && (client->isRegister() == false && parsed_args[0].compare("cmduser") != 0 && parsed_args[0].compare("cmdpass") != 0 ))
 	{
 		this->sendMessage(client, "Register with <cmduser> before using any command\n");
 		return ;
@@ -188,17 +195,15 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 
 void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 {
-	if (args.size() == 0)
+	if (args.size() != 0)
 	{
-		std::cout << "nothing in vector" << std::endl;
-		return ;
-	}
-	for (int i = 0; i < 11; i++)
-	{
-		if (args[0].compare(this->_cmds[i]) == 0)
+		for (int i = 0; i < 11; i++)
 		{
-			(this->*_commands_funcs[i])(client, args);
-			return ;
+			if (args[0].compare(this->_cmds[i]) == 0)
+			{
+				(this->*_commands_funcs[i])(client, args);
+				return ;
+			}
 		}
 	}
 	this->sendMessage(client, "Command not found.\n");
@@ -348,7 +353,7 @@ bool	Server::_doesChannelExists(const std::string& name) const
 bool	Server::_doesClientExists(const std::string& name) const
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
-		if (_clients[i]->getName() == name)
+		if (_clients[i]->getNickname() == name)
 			return (true);
 	return (false);
 }
@@ -364,7 +369,7 @@ Channel*	Server::_getChannel(const std::string& name)
 Client*	Server::_getClient(const std::string& name)
 {
 	for  (size_t i = 0; i < _clients.size(); ++i)
-		if (name == _clients[i]->getName())
+		if (name == _clients[i]->getNickname())
 			return (_clients[i]);
 	return (NULL);
 }
