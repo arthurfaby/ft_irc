@@ -72,7 +72,7 @@ void	Channel::removeMember(const Client *client)
 bool	Channel::isIn(const std::string& name) const
 {
 	for (size_t i = 0; i < _members.size(); ++i)
-		if (_members[i]->getName() == name)
+		if (_members[i]->getNickname() == name)
 			return (true);
 	return (false);
 }
@@ -80,7 +80,7 @@ bool	Channel::isIn(const std::string& name) const
 bool	Channel::isOp(const std::string& name) const
 {
 	for (size_t i = 0; i < _operators.size(); ++i)
-		if (_operators[i]->getName() == name)
+		if (_operators[i]->getNickname() == name)
 			return (true);
 	return (false);
 }

@@ -137,7 +137,7 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 		this->sendMessage(client, "[ERROR] : Usage: mode -o <nick> <channel>\n");
 		return;
 	}
-	std::cout << LOG << "CMDMODE command called by " << client->getSockfd() << std::endl;
+	std::cout << LOG << "CMDMODE command called by " << client->getName() << std::endl;
 	if (command[1] != "-o")
 	{
 		this->sendMessage(client, "[ERROR] : Usage: mode -o <nick> <channel>\n");
@@ -150,7 +150,7 @@ void	Server::_CMDMODE(Client* client, std::vector<std::string> & command)
 	}
 	if (_doesChannelExists(command[3]) == false)
 	{
-		this->sendMessage(client, "[ERROR] : Channel	doesn't exist\n");
+		this->sendMessage(client, "[ERROR] : Channel doesn't exist\n");
 		return;
 	}
 	channel = _getChannel(command[3]);

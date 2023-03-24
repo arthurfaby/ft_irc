@@ -48,26 +48,29 @@ void	Server::_CMDMSG(Client* client, std::vector<std::string> & args)
 	{
 		for (size_t i = 0; i < this->_channels.size(); i++)
 		{
-			if (this->_channels[i]->isIn(client->getName()) == false)
+			if (this->_channels[i]->isIn(client->getNickname()) == false)
 			{
 				this->sendMessage(client, "[ERROR] : You are not in the " + args[1] + " channel\n");
 				return ;
 			}
 			if (this->_channels[i]->getName().compare(args[1]) == 0)
-				this->_channels[i]->_send_msg_to_all_members(this, this->_channels[i]->getName() + " " + client->getName() + ": " + args[2].substr(1) + "\n");
+				this->_channels[i]->_send_msg_to_all_members(this, this->_channels[i]->getName() + " " + client->getNickname() + ": " + args[2].substr(1) + "\n");
 		}
 	}
 	else
 	{
 		for (size_t i = 0; i < this->_clients.size(); i++)
 		{
-			if (this->_clients[i]->getName().compare(client->getName()) == 0)
+			if (args[1].compare(client->getNickname()) == 0)
 			{
 				this->sendMessage(client, "[ERROR] : You can not send yourself a message\n");
 				return ;
 			}
-			if (this->_clients[i]->getName().compare(args[1]) == 0)
-				this->sendMessage(this->_clients[i], client->getName() + ": " + args[2].substr(1) + "\n");
+			if (this->_clients[i]->getNickname().compare(args[1]) == 0)
+			{
+				this->sendMessage(this->_clients[i], client->getNickname() + ": " + args[2].substr(1) + "\n");
+				return ;
+			}
 		}
 	}
 }

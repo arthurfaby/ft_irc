@@ -47,7 +47,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 		else
 		{
 			actual = _getChannel(channels[i]);
-			if (actual->isOp(client->getName()) == false)
+			if (actual->isOp(client->getNickname()) == false)
 			{
 				this->sendMessage(client, "[ERROR] : You are not operator of this channel\n");
 				continue;
@@ -56,11 +56,11 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 			{
 				actual->removeMember(_getClient(args[2]));
 				this->sendMessage(client, "You kicked " + args[2] + ".\n");
-				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getName() + ".\n");
+				this->sendMessage(this->_getClient(args[2]), "You have been kicked by " + client->getNickname() + ".\n");
 				this->sendMessage(this->_getClient(args[2]), "Reason : " + args[3].substr(1) + ".\n");
 				for (size_t j = 0; j < actual->getMembers().size(); ++j)
 					if (actual->getMembers()[j] != client)
-						this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getName() + " has been kicked by " + client->getName() + ".\n");
+						this->sendMessage(actual->getMembers()[j], channels[i] + ": " + client->getNickname() + " has been kicked by " + client->getNickname() + ".\n");
 
 			}
 			else
