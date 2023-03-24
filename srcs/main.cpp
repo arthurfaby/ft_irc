@@ -24,9 +24,9 @@ int	verif_args(int argc, char **argv)
 		std::cerr << ERROR << "Please enter a port between 6660 and 6669." << std::endl;
 		return (1);
 	}
-	if (!argv[2][0])
+	if (!argv[2][0] || std::string(argv[2]).find(' ') != std::string::npos)
 	{
-		std::cerr << ERROR << "Please enter a non null password." << std::endl;
+		std::cerr << ERROR << "Please enter a valid password (at least one character and no spaces)." << std::endl;
 		return (1);
 	}
 	return (0);
