@@ -17,6 +17,5 @@ int	handle_signal(void)
 		std::cerr << ERROR << "Signal function failed." << std::endl;
 		return (1);
 	}
-	std::cout << LOG << "Signal ^C handled." << std::endl;
 	return (0);
 }

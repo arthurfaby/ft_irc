@@ -16,7 +16,7 @@ bool	Server::_check_channel_or_user_exists(const std::string dest, Client *clien
 	{
 		for (size_t i = 0; i < this->_clients.size(); i++)
 		{
-			if (this->_clients[i]->getName().compare(dest) == 0)
+			if (this->_clients[i]->getNickname().compare(dest) == 0)
 				return (true);
 		}
 		this->sendMessage(client, "[ERROR] : " + dest + " not found\n");

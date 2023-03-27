@@ -22,9 +22,9 @@ void	Server::_CMDUSER(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : This username is too long (max 9 characters).\n");
 		return ;
 	}
-	if (username[0] == '#')
+	if (username[0] == '#' || username[0] == ':')
 	{
-		this->sendMessage(client, "[ERROR] : Your username can't begin with '#'.\n");
+		this->sendMessage(client, "[ERROR] : Your username can't begin with '#' or ':'.\n");
 		return ;
 	}
 	for (size_t i = 0; i < _clients.size(); ++i)

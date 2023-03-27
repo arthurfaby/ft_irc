@@ -43,6 +43,8 @@ int	main(int argc, char **argv)
 	srand(time(NULL));
 	Server	server(argv[1], argv[2]);
 
+	std::cout << LOG << "Server started" << std::endl;
 	server.run();
+	std::cout << LOG << "Server stopped" << std::endl;
 	return (0);
 }

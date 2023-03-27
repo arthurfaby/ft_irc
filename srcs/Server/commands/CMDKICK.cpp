@@ -12,7 +12,7 @@ void	Server::_CMDKICK(Client* client, std::vector<std::string>& args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDKICK <channel>[,...] <user> <:comment>\n");
 		return ;
 	}
-
+	std::cout << LOG << "CMDKICK command called by " + client->getName() << std::endl;
 	std::vector<std::string>	copy(args);
 	std::vector<std::string>	channels;
 	Channel						*actual;

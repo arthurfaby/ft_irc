@@ -126,6 +126,7 @@ void	Server::_CMDBOT(Client *client, std::vector<std::string> & args)
 		this->sendMessage(client, "[ERROR] : Usage: /CMDBOT <row> <column>\n");
 		return;
 	}
+	std::cout << LOG << "CMDBOT command called by " + client->getName() << std::endl;
 	if (args[1].size() != 1 || args[2].size() != 1 || std::isdigit(args[1][0]) == 0
 		|| std::isdigit(args[2][0]) == 0 || std::atoi(args[1].c_str()) > 2 || std::atoi(args[2].c_str()) > 2)
 	{

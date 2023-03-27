@@ -36,10 +36,10 @@ Server::~Server(void)
 
 	if (_listening_socket > 0)
 		close(_listening_socket);
-	for (size_t i = 0; i < channel_size; ++i)
-		delete _channels[i];
 	for (size_t i = 0; i < client_size; ++i)
 		this->_disconnect_client(_clients[0]);
+	for (size_t i = 0; i < channel_size; ++i)
+		delete _channels[i];
 }
 
 void	Server::sendMessage(Client* client, const std::string& message)
@@ -112,7 +112,6 @@ void	Server::run(void)
 		}
 		_remove_empty_channels();
 	}
-	std::cout << LOG << "Running false." << std::endl;
 }
 
 void	Server::_remove_empty_channels(void)
@@ -123,7 +122,6 @@ void	Server::_remove_empty_channels(void)
 	{
 		if ((*it)->getMembers().begin() == (*it)->getMembers().end())
 		{
-			std::cout << LOG << "Channel " << (*it)->getName() << " has been deleted." << std::endl;
 			delete *it;
 			_channels.erase(it);
 			it = _channels.begin();
@@ -143,12 +141,8 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	client->addToBuffer(args);
 	if (client->getBuffer().find("\r\n") == std::string::npos)
 	{
-		std::cout << LOG << "Buffer of " << client->getName() << " is not ready";
-		std::cout << "(" << client->getBuffer() << ")." << std::endl;
 		return ;
 	}
-	std::cout << LOG << "Buffer of " << client->getName() << " is treatable";
-	std::cout << "(" << client->getBuffer() << ")." << std::endl;
 	args = client->getBuffer();
 	client->resetBuffer();
 	if (args[0] == ' ')
@@ -198,7 +192,7 @@ void	Server::_call_cmd(std::vector<std::string> & args, Client *client)
 {
 	if (args.size() != 0)
 	{
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 13; i++)
 		{
 			if (args[0].compare(this->_cmds[i]) == 0)
 			{
@@ -230,7 +224,6 @@ void	Server::_disconnect_client(Client* client)
 		if (*it == client)
 		{
 			std::cout << LOG << "Client " << client->getName() << " has just been disconnected." << std::endl;
-			/* this->sendMessage(client, "You have been disconnected by server."); */
 			close(client->getSockfd());
 			delete *it;
 			_clients.erase(it);
