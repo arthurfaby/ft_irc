@@ -61,8 +61,6 @@ public:
 	//pas sur pour les deux suivantes parce que l'appel de la fonction dedans prendrait juste une ligne dans le main.
 	/*int					bind_socket(void) const;
 	int					listen_to_port(void) const;*/
-	
-
 
 private:
 	
