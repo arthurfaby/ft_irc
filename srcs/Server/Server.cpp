@@ -40,6 +40,7 @@ Server::~Server(void)
 		this->_disconnect_client(_clients[0]);
 	for (size_t i = 0; i < channel_size; ++i)
 		delete _channels[i];
+	std::cout << LOG << "Server stopped" << std::endl;
 }
 
 void	Server::sendMessage(Client* client, const std::string& message)

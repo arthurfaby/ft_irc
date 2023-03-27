@@ -44,10 +44,8 @@ std::vector<std::string>	get_empty_slot(std::vector<std::string> args, std::vect
 	for (; i < 3 && found != rand_value; ++i)
 	{
 		j = 0;
-		std::cout << i << std::endl;
 		for (; j < 3 && found != rand_value; ++j)
 		{
-			std::cout << j << std::endl;
 			if (board[i][j] == " ")
 				found++;
 			if (found == rand_value)

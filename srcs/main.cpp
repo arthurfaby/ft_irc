@@ -45,6 +45,5 @@ int	main(int argc, char **argv)
 
 	std::cout << LOG << "Server started" << std::endl;
 	server.run();
-	std::cout << LOG << "Server stopped" << std::endl;
 	return (0);
 }
