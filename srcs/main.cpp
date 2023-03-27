@@ -15,7 +15,10 @@ int	verif_args(int argc, char **argv)
 	while (argv[1][i])
 	{
 		if (!std::isdigit(argv[1][i]))
+		{
+			std::cerr << ERROR << "Usage : " << argv[0] << " <port> <password>" << std::endl;
 			return (1);
+		}
 		++i;
 	}
 	port = std::atoi(argv[1]);

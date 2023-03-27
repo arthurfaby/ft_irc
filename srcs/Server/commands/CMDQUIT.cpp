@@ -2,14 +2,9 @@
 
 void	Server::_CMDQUIT(Client* client, std::vector<std::string>& args)
 {
-	if (args.size() < 2)
+	if (args.size() != 1)
 	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDQUIT <:message>\n");
-		return ;
-	}
-	if (args[1][0] != ':' || args[1][1] == '\0')
-	{
-		this->sendMessage(client, "[ERROR] : Usage: /CMDQUIT <:message>\n");
+		this->sendMessage(client, "[ERROR] : Usage: /CMDQUIT\n");
 		return ;
 	}
 	std::cout << LOG << "CMDQUIT command called by " << client->getName() << std::endl;
