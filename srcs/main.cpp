@@ -40,6 +40,7 @@ int	main(int argc, char **argv)
 	if (verif_args(argc, argv))
 		return (1);
 	handle_signal();
+	srand(time(NULL));
 	Server	server(argv[1], argv[2]);
 
 	server.run();

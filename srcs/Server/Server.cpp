@@ -160,7 +160,7 @@ void	Server::_parse_cmd_args(std::string args, Client *client)
 	pos = args.find_last_not_of(" ");
 	if (pos != std::string::npos)
 		args.erase(pos + 1);//remove trailing spaces
-	for (size_t i = 0; i < args.size(); i++)
+	for (size_t i = 0; args[i] != ' ' && i < args.size(); i++)
 		args[i] = tolower(args[i]);//lowercase the entire string
 	end = args.find(' ', start);
 	while (end != std::string::npos)
@@ -335,7 +335,8 @@ void	Server::_init_commands_funcs(void)
 	this->_commands_funcs[8] = (&Server::_CMDNAMES);
 	this->_commands_funcs[9] = (&Server::_CMDJOIN);
 	this->_commands_funcs[10] = (&Server::_CMDPART);
-	this->_commands_funcs[11] = (&Server::_CMDWHOAMI);
+	this->_commands_funcs[11] = (&Server::_CMDBOT);
+	this->_commands_funcs[12] = (&Server::_CMDWHOAMI);
 }
 
 void	Server::_init_cmds(void)
@@ -351,7 +352,8 @@ void	Server::_init_cmds(void)
 	this->_cmds[8] = "cmdnames";
 	this->_cmds[9] = "cmdjoin";
 	this->_cmds[10] = "cmdpart";
-	this->_cmds[11] = "cmdwhoami";
+	this->_cmds[11] = "cmdbot";
+	this->_cmds[12] = "cmdwhoami";
 }
 
 bool	Server::_doesChannelExists(const std::string& name) const

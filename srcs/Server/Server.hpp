@@ -7,6 +7,8 @@
 #include <netinet/in.h>
 #include <cstdlib>
 #include <unistd.h>
+#include <time.h>
+#include <sstream>
 #include "Client.hpp"
 #include "Channel.hpp"
 #include "common.hpp"
@@ -70,8 +72,8 @@ private:
 	int						_nb_client;
 	int						_reply_code;
 	int						_listening_socket;
-	std::string				_cmds[12];
-	void					(Server::*_commands_funcs[12])(Client *client, std::vector<std::string> & args);
+	std::string				_cmds[13];
+	void					(Server::*_commands_funcs[13])(Client *client, std::vector<std::string> & args);
 	std::vector<Client *>	_clients; // temp attributs of sockets waiting for Client class
 	std::vector<Channel *>	_channels;
 	struct sockaddr_in		_address;
@@ -122,6 +124,9 @@ private:
 	void	_CMDJOIN(Client* client, std::vector<std::string> & args);	
 
 	void	_CMDPART(Client* client,  std::vector<std::string> & args);	
+
+	void	_CMDBOT(Client* client,  std::vector<std::string> & args);	
+	int		_display_game(Client *client, std::vector<std::string> & args, int trigger);
 
 	void	_CMDWHOAMI(Client* client, std::vector<std::string> & args);
 };

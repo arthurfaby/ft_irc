@@ -8,6 +8,7 @@ Client::Client(const int& sockfd) :
 	_pass(false),
 	_is_register(false)
 {
+	this->_init_board();
 }
 
 Client::~Client(void)
@@ -44,6 +45,11 @@ const std::string&	Client::getName(void) const
 	return (_name);
 }
 
+const std::vector<std::vector<std::string> >&	Client::getBoard(void) const
+{
+	return (_board);
+}
+
 void	Client::setName(const std::string& name)
 {
 	_name = name;
@@ -72,4 +78,24 @@ void	Client::setRegister(const bool& is_register)
 void	Client::setNickname(const std::string& nickname)
 {
 	_nickname = nickname;
+}
+
+void	Client::setBoard(const std::string& sign, size_t x, size_t y)
+{
+	this->_board[x][y] = sign;
+}
+
+void	Client::_init_board(void)
+{
+	size_t	j;
+
+	this->_board.clear();
+	for (size_t i = 0; i < 3; ++i)
+	{
+		std::vector<std::string>	row;
+		j = 0;
+		for (; j < 3; ++j) 
+			row.push_back(" ");
+		this->_board.push_back(row);
+	}
 }

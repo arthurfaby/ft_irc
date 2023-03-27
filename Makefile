@@ -10,6 +10,7 @@ SRCS =	srcs/main.cpp						\
 		srcs/Server/commands/CMDQUIT.cpp	\
 		srcs/Server/commands/CMDPART.cpp	\
 		srcs/Server/commands/CMDKICK.cpp	\
+		srcs/Server/commands/CMDBOT.cpp	\
 		srcs/Server/commands/CMDWHOAMI.cpp	\
 		srcs/Server/Commands.cpp			\
 		srcs/signal.cpp

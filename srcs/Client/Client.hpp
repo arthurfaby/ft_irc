@@ -2,6 +2,7 @@
 #define CLIENT_HPP
 
 #include <string>
+#include <vector>
 
 class Client
 {
@@ -20,23 +21,30 @@ public:
 	void			setPass(const bool& pass);
 	void			setRegister(const bool& is_register);
 	void			setNickname(const std::string& nickname);
+	void			setBoard(const std::string& sign, size_t x, size_t y);
 
 	// Getters
-	const bool&				getPass(void) const;
-	const std::string&		getName(void) const;
-	const int&				getSockfd(void) const;
-	const bool&				isRegister(void) const;
-	const std::string&		getNickname(void)const;
-	const std::string&		getBuffer(void) const;
+	const bool&										getPass(void) const;
+	const std::string&								getName(void) const;
+	const int&										getSockfd(void) const;
+	const bool&										isRegister(void) const;
+	const std::string&								getNickname(void)const;
+	const std::string&								getBuffer(void) const;
+	const std::vector<std::vector<std::string> >&	getBoard(void) const;
+
+	// Methods
+	void											_init_board(void);
 
 private:
 
-	std::string				_name;		// Unique name of the client (max 9 characters)
-	std::string				_nickname;
-	std::string				_buffer;
-	const int				_sockfd;	// fd which referred to the client socket
-	bool					_pass;		// true if client entererd password, false otherwise
+	std::string								_name;		// Unique name of the client (max 9 characters)
+	std::string								_nickname;
+	std::string								_buffer;
+	std::vector<std::vector<std::string> >	_board;		// Tic tac toe board unique to this client
+	const int								_sockfd;	// fd which referred to the client socket
+	bool									_pass;		// true if client entererd password, false otherwise
 	bool					_is_register;	// true if client used 'USER' command to register
+
 
 };
 
