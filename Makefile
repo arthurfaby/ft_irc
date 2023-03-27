@@ -12,8 +12,12 @@ SRCS =	srcs/main.cpp						\
 		srcs/Server/commands/CMDKICK.cpp	\
 		srcs/Server/commands/CMDBOT.cpp	\
 		srcs/Server/commands/CMDWHOAMI.cpp	\
-		srcs/Server/Commands.cpp			\
-		srcs/signal.cpp
+		srcs/signal.cpp						\
+		srcs/Server/commands/CMDINVITE.cpp	\
+		srcs/Server/commands/CMDPASS.cpp	\
+		srcs/Server/commands/CMDJOIN.cpp	\
+		srcs/Server/commands/CMDNICK.cpp	\
+		srcs/Server/commands/CMDMODE.cpp	\
 
 OBJS = ${SRCS:.cpp=.o}
 
