@@ -5,6 +5,9 @@
 **CMDNICK** <nickname>
 >Sets a nickname for the user calling it. Can be called multiple times.
 
+**CMDWHOAMI**
+>Show your infos.
+
 **CMDUSER** <username>
 >Sets a username for the user calling it. Can be called only once and is mandatory to start using the other commands (except CMDPASS and CMDQUIT).
 		
